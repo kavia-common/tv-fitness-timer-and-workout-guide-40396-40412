@@ -82,9 +82,32 @@ function App() {
               gap: 'var(--space-6)',
             }}
           >
-            <div className="tv-card" style={{ padding: 'var(--space-6)' }}>
-              <div className="h3" style={{ marginBottom: 'var(--space-4)' }}>Quick Timer</div>
-              <WorkoutTimer seconds={60} title="1-Minute Timer" />
+            <div
+              className="tv-card"
+              style={{
+                padding: 'var(--space-6)',
+                position: 'relative',
+                overflow: 'hidden',
+                borderRadius: 'var(--radius-xl)',
+                backgroundImage: 'url(/assets/quick-timer.jpeg)',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+              }}
+            >
+              {/* scrim */}
+              <div
+                aria-hidden="true"
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  background:
+                    'linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.22) 45%, rgba(0,0,0,0.35) 100%)',
+                }}
+              />
+              <div style={{ position: 'relative', zIndex: 1 }}>
+                <div className="h3" style={{ marginBottom: 'var(--space-4)', color: '#fff' }}>Quick Timer</div>
+                <WorkoutTimer seconds={60} title="1-Minute Timer" />
+              </div>
             </div>
 
             <TVFocusable
@@ -92,14 +115,34 @@ function App() {
               role="button"
               ariaLabel="Start Quick HIIT, 10 minutes, High intensity"
               className="tv-card"
-              style={{ padding: 'var(--space-6)' }}
+              style={{
+                padding: 'var(--space-6)',
+                position: 'relative',
+                overflow: 'hidden',
+                borderRadius: 'var(--radius-xl)',
+                backgroundImage: 'url(/assets/quick-hiit.jpeg)',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                color: '#fff',
+              }}
               tabIndex={0}
               onSelect={() => {
                 /* hook to start Quick HIIT */
               }}
             >
-              <div className="h3">Quick HIIT</div>
-              <div style={{ color: 'var(--color-text-secondary)' }}>10 min • High intensity</div>
+              <div
+                aria-hidden="true"
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  background:
+                    'linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.22) 45%, rgba(0,0,0,0.35) 100%)',
+                }}
+              />
+              <div style={{ position: 'relative', zIndex: 1 }}>
+                <div className="h3">Quick HIIT</div>
+                <div style={{ color: 'rgba(255,255,255,0.9)' }}>10 min • High intensity</div>
+              </div>
             </TVFocusable>
 
             <TVFocusable
@@ -107,14 +150,34 @@ function App() {
               role="button"
               ariaLabel="Start Core Starter, 8 minutes, Beginner"
               className="tv-card"
-              style={{ padding: 'var(--space-6)' }}
+              style={{
+                padding: 'var(--space-6)',
+                position: 'relative',
+                overflow: 'hidden',
+                borderRadius: 'var(--radius-xl)',
+                backgroundImage: 'url(/assets/core-starter.jpeg)',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                color: '#fff',
+              }}
               tabIndex={0}
               onSelect={() => {
                 /* hook to start Core Starter */
               }}
             >
-              <div className="h3">Core Starter</div>
-              <div style={{ color: 'var(--color-text-secondary)' }}>8 min • Beginner</div>
+              <div
+                aria-hidden="true"
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  background:
+                    'linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.22) 45%, rgba(0,0,0,0.35) 100%)',
+                }}
+              />
+              <div style={{ position: 'relative', zIndex: 1 }}>
+                <div className="h3">Core Starter</div>
+                <div style={{ color: 'rgba(255,255,255,0.9)' }}>8 min • Beginner</div>
+              </div>
             </TVFocusable>
           </div>
         </section>

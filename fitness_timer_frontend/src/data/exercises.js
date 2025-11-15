@@ -47,6 +47,47 @@ const gradientKeys = {
 
 // PUBLIC_INTERFACE
 export const EXERCISE_SECTIONS = [
+  // Quick actions / hero cards
+  {
+    id: 'quick',
+    title: 'Quick Actions',
+    description: 'Jump right into a quick session.',
+    items: [
+      {
+        id: 'quick-timer',
+        name: 'Quick Timer',
+        category: 'Quick',
+        durationDefault: 60,
+        description: 'Start a 1‑minute timer instantly.',
+        difficulty: 'Beginner',
+        equipment: 'None',
+        thumbnail: '/assets/quick-timer.jpeg',
+        tags: ['quick', 'timer'],
+      },
+      {
+        id: 'quick-hiit',
+        name: 'Quick HIIT',
+        category: 'Quick',
+        durationDefault: 600,
+        description: 'A short, high‑intensity session to get your heart rate up.',
+        difficulty: 'Intermediate',
+        equipment: 'None',
+        thumbnail: '/assets/quick-hiit.jpeg',
+        tags: ['quick', 'hiit', 'cardio'],
+      },
+      {
+        id: 'core-starter',
+        name: 'Core Starter',
+        category: 'Quick',
+        durationDefault: 480,
+        description: 'Beginner‑friendly core routine to activate your midline.',
+        difficulty: 'Beginner',
+        equipment: 'None',
+        thumbnail: '/assets/core-starter.jpeg',
+        tags: ['quick', 'core', 'beginner'],
+      },
+    ],
+  },
   {
     id: 'warmup',
     title: 'Warm-up',
