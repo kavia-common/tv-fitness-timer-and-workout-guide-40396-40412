@@ -1,12 +1,77 @@
+@import './theme/oceanTheme.css';
+
+/* Global Box Sizing */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Root TV-scale font sizing uses --font-size-base from theme */
+html {
+  font-size: var(--font-size-base, 20px);
+}
+
+/* Body baseline using Ocean Professional tokens */
 body {
   margin: 0;
+  color: var(--color-text);
+  background: var(--color-bg);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  /* TV ambient gradient background */
+  background-image: var(--gradient-ambient), var(--gradient-ocean);
+  background-attachment: fixed, fixed;
+  background-repeat: no-repeat, no-repeat;
+  background-size: cover, cover;
 }
 
+/* Smooth animations - only transform/opacity for performance */
+.smooth-fade-in {
+  opacity: 0.001;
+  transform: translateY(6px);
+  will-change: opacity, transform;
+  animation: fadeSlideIn 420ms var(--ease-standard) forwards;
+}
+
+@keyframes fadeSlideIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Focus visible utility for TV navigation */
+.focus-visible {
+  outline: var(--focus-ring-outline);
+  box-shadow: var(--focus-ring-shadow);
+}
+
+/* Reusable card class for surfaces */
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition-med), box-shadow var(--transition-med), border-color var(--transition-med);
+  will-change: transform, box-shadow;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.card:focus-visible {
+  outline: var(--focus-ring-outline);
+  box-shadow: var(--focus-ring-shadow);
+}
+
+/* Code font */
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
