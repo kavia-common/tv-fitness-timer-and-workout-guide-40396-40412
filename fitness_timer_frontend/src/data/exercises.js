@@ -138,14 +138,14 @@ export const EXERCISE_SECTIONS = [
       },
       {
         id: 'st-lunges',
-        name: 'Alternating Lunges',
+        name: 'Alternating Bridge',
         category: 'Strength',
         durationDefault: 45,
-        description: 'Step forward, lower under control, alternate legs each rep.',
+        description: 'Alternate bridging each side to engage glutes and hamstrings; maintain stable core.',
         difficulty: 'Beginner',
         equipment: 'None',
-        thumbnail: '/assets/alternating-lunges-poster.jpeg',
-        tags: ['lower-body', 'glutes', 'balance'],
+        thumbnail: '/assets/alternating-bridge-poster.jpeg',
+        tags: ['lower-body', 'glutes', 'hamstrings', 'core'],
       },
       {
         id: 'st-glute-bridge',
