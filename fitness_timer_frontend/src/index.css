@@ -71,6 +71,21 @@ body {
   box-shadow: var(--focus-ring-shadow);
 }
 
+/* Row scroller scrollbar hidden (Firefox and WebKit) */
+.row-scroller {
+  scrollbar-width: none;
+}
+.row-scroller::-webkit-scrollbar {
+  display: none;
+}
+
+/* Focus scaling helper for row items (applied via className) */
+.row-card-focused {
+  transform: scale(1.02);
+  box-shadow: var(--shadow-lg);
+  transition: transform var(--transition-med), box-shadow var(--transition-med);
+}
+
 /* Code font */
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',

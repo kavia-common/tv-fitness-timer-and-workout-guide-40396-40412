@@ -3,12 +3,14 @@ import './App.css';
 import ScreenWrapper from './components/ScreenWrapper';
 import Header from './components/Header';
 import TVFocusable from './components/TVFocusable';
+import Row from './components/Row';
+import { EXERCISE_SECTIONS } from './data/exercises';
 
 /**
  * PUBLIC_INTERFACE
  * App
  * Root of the Android TV Fitness Timer and Workout Guide UI.
- * Renders ScreenWrapper -> Header -> placeholder Row containers.
+ * Renders ScreenWrapper -> Header -> Rows of exercises.
  * Includes focus-ready layout that integrates with FocusManager key routing.
  */
 function App() {
@@ -55,7 +57,9 @@ function App() {
               className="tv-card"
               style={{ padding: 'var(--space-6)' }}
               tabIndex={0}
-              onSelect={() => { /* hook to start Quick HIIT */ }}
+              onSelect={() => {
+                /* hook to start Quick HIIT */
+              }}
             >
               <div className="h3">Quick HIIT</div>
               <div style={{ color: 'var(--color-text-secondary)' }}>10 min • High intensity</div>
@@ -67,7 +71,9 @@ function App() {
               className="tv-card"
               style={{ padding: 'var(--space-6)' }}
               tabIndex={0}
-              onSelect={() => { /* hook to start Core Starter */ }}
+              onSelect={() => {
+                /* hook to start Core Starter */
+              }}
             >
               <div className="h3">Core Starter</div>
               <div style={{ color: 'var(--color-text-secondary)' }}>8 min • Beginner</div>
@@ -79,7 +85,9 @@ function App() {
               className="tv-card"
               style={{ padding: 'var(--space-6)' }}
               tabIndex={0}
-              onSelect={() => { /* hook to start Full Body */ }}
+              onSelect={() => {
+                /* hook to start Full Body */
+              }}
             >
               <div className="h3">Full Body</div>
               <div style={{ color: 'var(--color-text-secondary)' }}>20 min • Mixed</div>
@@ -87,38 +95,25 @@ function App() {
           </div>
         </section>
 
-        {/* Exercises Row placeholder */}
-        <section className="px-container" aria-label="Popular Exercises" style={{ marginTop: 'var(--space-12)' }}>
-          <div className="h2" style={{ marginBottom: 'var(--space-6)' }}>
-            Popular Exercises
-          </div>
-          <div
-            role="list"
-            className="row-enter row-enter-active"
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
-              gap: 'var(--space-6)',
+        {/* Data-driven Rows */}
+        {EXERCISE_SECTIONS.map((section) => (
+          <Row
+            key={section.id}
+            id={`row-${section.id}`}
+            title={section.title}
+            items={section.items.map((it) => ({
+              id: it.id,
+              name: it.name,
+              subtitle: `${it.durationDefault}s • ${it.difficulty}`,
+              thumbnail: it.thumbnail,
+            }))}
+            onSelectItem={(item) => {
+              // TODO: integrate with timer/details view
+              // eslint-disable-next-line no-console
+              console.log('Selected item:', item);
             }}
-          >
-            {['Push-ups', 'Squats', 'Plank', 'Burpees', 'Lunges', 'Mountain Climbers'].map((name) => (
-              <TVFocusable
-                key={name}
-                id={`exercise-${name.toLowerCase().replace(/\\s+/g, '-')}`}
-                role="listitem"
-                className="tv-card"
-                style={{ padding: 'var(--space-6)' }}
-                tabIndex={0}
-                onSelect={() => { /* hook to open exercise details or start timer */ }}
-              >
-                <div className="h3" style={{ marginBottom: 'var(--space-2)' }}>
-                  {name}
-                </div>
-                <div style={{ color: 'var(--color-text-secondary)' }}>Beginner • Bodyweight</div>
-              </TVFocusable>
-            ))}
-          </div>
-        </section>
+          />
+        ))}
       </div>
     </ScreenWrapper>
   );

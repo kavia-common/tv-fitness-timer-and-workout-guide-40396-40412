@@ -85,6 +85,7 @@
 .tv-card:focus-visible {
   outline: var(--focus-ring-outline);
   box-shadow: var(--focus-ring-shadow);
+  transform: scale(1.02);
 }
 
 /* Focus utilities */
@@ -92,6 +93,7 @@
   outline: var(--focus-ring-outline);
   box-shadow: var(--focus-ring-shadow);
   border-radius: var(--radius-md);
+  transform: translateZ(0) scale(1.02);
 }
 
 /* Row/grid subtle entry transitions */
