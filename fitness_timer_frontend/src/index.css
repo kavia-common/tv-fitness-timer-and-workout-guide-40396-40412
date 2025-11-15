@@ -7,6 +7,7 @@ html[data-animations-off="true"] * {
   scroll-behavior: auto !important;
 }
 
+/* Debug focus visuals when enabled via flags */
 .ff-debug-focus:focus,
 .ff-debug-focus .focus-visible-outline:focus-visible,
 html[data-debug-focus="true"] .focus-visible-outline:focus-visible {
@@ -66,12 +67,14 @@ body {
   box-shadow: var(--focus-inner-stroke), var(--focus-ring-shadow);
 }
 
-/* Pointer hover/click feedback for mouse users */
+/* Pointer hover/click feedback for mouse users WITHOUT interfering with TV focus */
 [data-focusable="true"]:hover {
   filter: brightness(1.02);
+  will-change: filter;
 }
 [data-focusable="true"]:active {
-  transform: translateY(0.5px) scale(0.995);
+  transform: translateY(0.5px) scale(0.95); /* pressed matches buttons */
+  will-change: transform;
 }
 
 /* Reusable card class for surfaces */
@@ -90,9 +93,14 @@ body {
   box-shadow: var(--shadow-md);
 }
 
+.card:active {
+  transform: scale(0.95);
+}
+
 .card:focus-visible {
   outline: var(--focus-ring-outline);
   box-shadow: var(--focus-inner-stroke), var(--focus-ring-shadow);
+  transform: scale(1.03);
 }
 
 /* Row scroller scrollbar hidden (Firefox and WebKit) */
@@ -113,7 +121,7 @@ body {
 
 /* Focus scaling helper for row items (applied via className) */
 .row-card-focused {
-  transform: scale(1.02);
+  transform: scale(1.03);
   box-shadow: var(--focus-inner-stroke), var(--focus-ring-shadow);
   transition: transform var(--transition-med), box-shadow var(--transition-med);
 }

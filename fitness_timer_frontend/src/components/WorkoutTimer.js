@@ -192,7 +192,7 @@ export default function WorkoutTimer({ seconds = 60, title = 'Timer', onComplete
             strokeDasharray={`${dash} ${CIRC - dash}`}
             strokeLinecap="round"
             style={{
-              transition: 'stroke-dasharray 180ms var(--ease-standard)',
+              transition: 'stroke-dasharray var(--transition-med)',
               filter: 'drop-shadow(0 6px 12px rgba(0,0,0,0.12))',
             }}
           />
@@ -209,7 +209,7 @@ export default function WorkoutTimer({ seconds = 60, title = 'Timer', onComplete
             transform: 'rotate(0deg)',
           }}
         >
-          <div style={{ fontSize: 'calc(var(--font-size-3xl) + 6px)', fontWeight: 800 }}>
+          <div style={{ fontSize: 'calc(var(--font-size-3xl) + 10px)', fontWeight: 800 }}>
             {formatSeconds(remaining)}
           </div>
           <div style={{ color: 'var(--color-text-secondary)', marginTop: 6 }}>
@@ -240,7 +240,7 @@ export default function WorkoutTimer({ seconds = 60, title = 'Timer', onComplete
             width: `${Math.round(progress * 100)}%`,
             height: '100%',
             background: 'linear-gradient(90deg, var(--color-primary), var(--color-secondary))',
-            transition: 'width 180ms var(--ease-standard)',
+            transition: 'width var(--transition-med)',
           }}
         />
       </div>
@@ -296,16 +296,16 @@ export default function WorkoutTimer({ seconds = 60, title = 'Timer', onComplete
         .pulse::after {
           content: '';
           position: absolute;
-          inset: -8px;
+          inset: -10px;
           border-radius: 999px;
-          background: radial-gradient(circle at center, rgba(245, 158, 11, 0.25), rgba(245, 158, 11, 0) 60%);
-          animation: timer-pulse 900ms var(--ease-standard) 1;
+          background: radial-gradient(circle at center, rgba(245, 158, 11, 0.28), rgba(245, 158, 11, 0) 62%);
+          animation: timer-pulse 980ms var(--ease-standard) 1;
           pointer-events: none;
         }
         @keyframes timer-pulse {
           0% { opacity: 0.0; transform: scale(0.9); }
-          20% { opacity: 1; transform: scale(1.02); }
-          100% { opacity: 0; transform: scale(1.15); }
+          22% { opacity: 1; transform: scale(1.04); }
+          100% { opacity: 0; transform: scale(1.16); }
         }
       `}</style>
     </div>

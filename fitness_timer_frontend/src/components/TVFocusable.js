@@ -172,6 +172,7 @@ const TVFocusable = forwardRef(function TVFocusable(
       onFocus={handleFocus}
       onBlur={handleBlur}
       onClick={handleClick}
+      style={{ willChange: 'transform, box-shadow', ...(rest.style || {}) }}
       {...rest}
     >
       {children}

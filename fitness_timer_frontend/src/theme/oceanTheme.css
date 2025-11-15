@@ -17,10 +17,11 @@
   --bg-gradient-start: #F5F8FF;
   --bg-gradient-end: #D8E8FF;
 
-  /* Gradients */
+  /* Gradients: subtle ocean diagonal on canvas; richer scrim on cards */
   --gradient-ocean: linear-gradient(180deg, rgba(37, 99, 235, 0.08) 0%, rgba(249, 250, 251, 1) 100%);
   --gradient-ambient: radial-gradient(1200px 600px at 10% -10%, rgba(37, 99, 235, 0.12) 0%, rgba(255, 255, 255, 0) 60%),
-                      radial-gradient(900px 500px at 90% -20%, rgba(245, 158, 11, 0.08) 0%, rgba(255, 255, 255, 0) 60%);
+                      radial-gradient(900px 500px at 90% -20%, rgba(245, 158, 11, 0.08) 0%, rgba(255, 255, 255, 0) 60%),
+                      linear-gradient(135deg, rgba(37,99,235,0.06), rgba(245,158,11,0.03));
   --gradient-canvas: linear-gradient(180deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
 
   /* Spacing scale (TV-scale: slightly larger) */
@@ -45,32 +46,189 @@
   --radius-2xl: 28px;
   --radius-pill: 999px;
 
-  /* Shadows (subtle + elevation) */
-  --shadow-sm: 0 1px 2px rgba(0,0,0,0.06);
-  --shadow-md: 0 6px 20px rgba(0,0,0,0.12);
-  --shadow-lg: 0 10px 36px rgba(0,0,0,0.18);
+  /* Layered soft shadows for cards and header glass */
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.06), 0 0 0 1px rgba(17,24,39,0.02);
+  --shadow-md: 0 6px 20px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.06);
+  --shadow-lg: 0 10px 36px rgba(0,0,0,0.18), 0 6px 16px rgba(0,0,0,0.10);
 
-  /* Stronger TV focus ring per design notes: thicker amber glow + inner white stroke */
+  /* Stronger TV focus ring: thicker amber glow + inner outline */
   --focus-ring-color: rgba(245, 158, 11, 0.98);
   --focus-ring-outline: 4px solid var(--focus-ring-color);
-  --focus-ring-shadow: 0 0 0 8px rgba(245, 158, 11, 0.28), 0 8px 20px rgba(0,0,0,0.2);
-  --focus-inner-stroke: 0 0 0 2px rgba(255,255,255,0.92) inset;
+  --focus-ring-shadow: 0 0 0 10px rgba(245, 158, 11, 0.32), 0 10px 24px rgba(0,0,0,0.24);
+  --focus-inner-stroke: 0 0 0 2px rgba(255,255,255,0.96) inset;
 
-  /* Transitions / motion */
+  /* Transitions / motion (cards/buttons 140–220ms; modal slower 280ms) */
   --ease-standard: cubic-bezier(0.2, 0.8, 0.2, 1);
-  --transition-fast: 150ms var(--ease-standard);
-  --transition-med: 220ms var(--ease-standard);
-  --transition-slow: 360ms var(--ease-standard);
+  --transition-fast: 140ms var(--ease-standard);
+  --transition-med: 200ms var(--ease-standard);
+  --transition-slow: 280ms var(--ease-standard);
 
-  /* TV-scale base font sizes (use with rem) per 10-foot scale */
+  /* TV-scale base font sizes (10-foot hierarchy slight increase) */
   --font-size-base: 20px;      /* TV base ~18–22px */
-  --font-size-xs: 0.8rem;      /* ~16px */
-  --font-size-sm: 0.9rem;      /* ~18px */
-  --font-size-md: 1rem;        /* ~20px */
-  --font-size-lg: 1.2rem;      /* ~24px */
-  --font-size-xl: 1.6rem;      /* ~32px */
-  --font-size-2xl: 2.2rem;     /* ~44px section headers */
-  --font-size-3xl: 2.8rem;     /* ~56px hero/timer */
+  --font-size-xs: 0.82rem;     /* ~16.4px */
+  --font-size-sm: 0.95rem;     /* ~19px */
+  --font-size-md: 1.05rem;     /* ~21px */
+  --font-size-lg: 1.25rem;     /* ~25px */
+  --font-size-xl: 1.7rem;      /* ~34px */
+  --font-size-2xl: 2.35rem;    /* ~47px section headers */
+  --font-size-3xl: 2.95rem;    /* ~59px hero/timer */
+}
+
+/* Header glass bar per design notes */
+header.px-container {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  height: 92px;
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  background: rgba(255,255,255,0.55);
+  border-bottom: 1px solid var(--color-border);
+  backdrop-filter: blur(16px) saturate(120%);
+  -webkit-backdrop-filter: blur(16px) saturate(120%);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.06); /* add soft drop under glass */
+}
+
+/* Base card utility using theme tokens */
+.tv-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm);
+  color: var(--color-text);
+  transition: transform var(--transition-med), box-shadow var(--transition-med), border-color var(--transition-med), filter var(--transition-med);
+  will-change: transform, box-shadow;
+  overflow: visible; /* Ensure focus ring not clipped */
+}
+
+.tv-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.tv-card:focus-visible {
+  outline: var(--focus-ring-outline);
+  box-shadow: var(--focus-inner-stroke), var(--focus-ring-shadow);
+  transform: scale(1.03); /* reduce scale to avoid clipping */
+}
+
+/* Focus utilities */
+.focus-visible-outline:focus-visible {
+  outline: var(--focus-ring-outline);
+  box-shadow: var(--focus-inner-stroke), var(--focus-ring-shadow);
+  border-radius: var(--radius-lg);
+  transform: translateZ(0) scale(1.03); /* unify scale */
+}
+
+/* Row/grid subtle entry transitions */
+.row-enter {
+  opacity: 0.001;
+  transform: translateY(6px);
+  will-change: opacity, transform;
+}
+
+.row-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity var(--transition-slow), transform var(--transition-slow);
+}
+
+/* Button styles */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: 64px;
+  padding: var(--space-3) var(--space-5);
+  border-radius: var(--radius-pill);
+  border: 1px solid transparent;
+  background: var(--color-primary);
+  color: #fff;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast), border-color var(--transition-fast), filter var(--transition-fast);
+  will-change: transform, box-shadow;
+  line-height: 1;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+  filter: brightness(1.02);
+}
+
+.btn:active {
+  transform: scale(0.95); /* pressed dip to 95% */
+  box-shadow: var(--shadow-sm);
+}
+
+.btn:focus-visible {
+  outline: var(--focus-ring-outline);
+  box-shadow: var(--focus-inner-stroke), var(--focus-ring-shadow);
+}
+
+.btn-secondary {
+  background: var(--color-secondary);
+  color: #111;
+}
+
+.btn-surface {
+  background: var(--color-surface);
+  color: var(--color-text);
+  border-color: var(--color-border);
+}
+
+/* Utility spacing classes for TV layout with safe-area and max-width */
+.px-container {
+  padding-left: max(clamp(var(--space-6), 5vw, var(--space-16)), env(safe-area-inset-left));
+  padding-right: max(clamp(var(--space-6), 5vw, var(--space-16)), env(safe-area-inset-right));
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 1600px;
+}
+
+.py-screen {
+  padding-top: max(var(--space-10), env(safe-area-inset-top));
+  padding-bottom: max(var(--space-10), env(safe-area-inset-bottom));
+}
+
+/* Headings tuned for TV readability (slightly larger) */
+.h1 {
+  font-size: var(--font-size-3xl);
+  line-height: 1.2;
+  margin: 0 0 var(--space-6);
+  letter-spacing: 0.3px;
+}
+
+.h2 {
+  font-size: var(--font-size-2xl);
+  line-height: 1.22;
+  margin: 0 0 var(--space-6);
+  letter-spacing: 0.25px;
+}
+
+.h3 {
+  font-size: var(--font-size-xl);
+  line-height: 1.3;
+  margin: 0 0 var(--space-4);
+  letter-spacing: 0.2px;
+}
+
+/* Ambient background helper + global gradient */
+.bg-ocean-ambient {
+  background-image: var(--gradient-ambient), var(--gradient-canvas);
+  background-attachment: fixed, fixed;
+  background-repeat: no-repeat, no-repeat;
+  background-size: cover, cover;
+}
+
+/* Row card focus helper for carousels */
+.row-card-focused {
+  transform: scale(1.03);
+  box-shadow: var(--focus-inner-stroke), var(--focus-ring-shadow);
+  transition: transform var(--transition-med), box-shadow var(--transition-med);
 }
 
 /* Header glass bar per design notes */

@@ -112,8 +112,8 @@ export default function Header({ theme, onToggleTheme }) {
         </TVFocusable>
       </div>
       <style>{`
-        header .btn:hover { transform: translateY(-2px) scale(1.01); }
-        header .btn:active { transform: scale(0.985); }
+        header .btn:hover { transform: translateY(-1px) scale(1.01); transition: transform var(--transition-fast); }
+        header .btn:active { transform: scale(0.95); transition: transform var(--transition-fast); }
       `}</style>
     </header>
   );

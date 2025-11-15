@@ -63,7 +63,7 @@ export default function ExerciseCard({
         borderRadius: 'var(--radius-2xl)',
         overflow: 'hidden',
         minHeight: 260,
-        // Focus animation: subtle scale + elevate shadow
+        // Focus/pressed animation: subtle scale + elevate shadow, transform-only to avoid layout shift
         transition: 'transform var(--transition-med), box-shadow var(--transition-med), border-color var(--transition-med), background var(--transition-med), filter var(--transition-med)',
         backgroundColor: 'var(--color-surface)',
         position: 'relative',
@@ -79,7 +79,7 @@ export default function ExerciseCard({
           position: 'absolute',
           inset: 0,
           background:
-            'linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(0,0,0,0.10) 40%, rgba(0,0,0,0.28) 100%)',
+            'linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.22) 45%, rgba(0,0,0,0.35) 100%)',
           pointerEvents: 'none',
         }}
       />

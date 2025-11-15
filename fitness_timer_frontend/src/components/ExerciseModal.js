@@ -205,9 +205,20 @@ export default function ExerciseModal({ exercise, onClose, initialFocusId = 'exe
           background: rgba(255,255,255,0.08);
           color: #fff;
           border: 1px solid rgba(255,255,255,0.18);
+          transition: transform var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast);
+          will-change: transform;
         }
         .btn.btn-surface:hover {
           background: rgba(255,255,255,0.12);
+        }
+        .btn.btn-surface:active {
+          transform: scale(0.95);
+        }
+        /* Modal card glass elevation */
+        .px-container + .px-container .tv-card,
+        .px-container .tv-card {
+          box-shadow: var(--shadow-md);
+          transition: box-shadow var(--transition-slow), transform var(--transition-slow);
         }
       `}</style>
     </div>
