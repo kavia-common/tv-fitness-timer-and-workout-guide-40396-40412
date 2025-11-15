@@ -8,6 +8,7 @@ import { EXERCISE_SECTIONS } from './data/exercises';
 import WorkoutTimer from './components/WorkoutTimer';
 import ExerciseModal from './components/ExerciseModal';
 import { debugLog } from './utils/debug';
+import DebugOverlay from './components/DebugOverlay';
 
 /**
  * PUBLIC_INTERFACE
@@ -25,7 +26,11 @@ function App() {
 
   // Apply theme to document
   useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
+    try {
+      document.documentElement.setAttribute('data-theme', theme);
+    } catch {
+      /* ignore */
+    }
   }, [theme]);
 
   // PUBLIC_INTERFACE
@@ -62,6 +67,7 @@ function App() {
 
   return (
     <ScreenWrapper theme={theme}>
+      <DebugOverlay />
       <div className="App">
         <Header theme={theme} onToggleTheme={toggleTheme} />
 

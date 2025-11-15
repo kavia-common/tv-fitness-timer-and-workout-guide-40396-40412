@@ -58,7 +58,7 @@ const TVFocusable = forwardRef(function TVFocusable(
 ) {
   const { ref: focusRingRef, focus: focusRingFocus } = useTVFocusRing();
   const localRef = useRef(null);
-  const { register, setInitialFocus } = useFocusManager();
+  const fm = useFocusManager();
 
   // Merge multiple refs into one assignment target
   const setRefs = useCallback(
@@ -73,16 +73,16 @@ const TVFocusable = forwardRef(function TVFocusable(
 
   // Register with FocusManager when id is provided
   useEffect(() => {
-    if (!id) return undefined;
-    const unregister = register(id, { current: localRef.current }, { focusable: true });
-    if (autoFocus) {
+    if (!id || !fm || typeof fm.register !== 'function') return undefined;
+    const unregister = fm.register(id, { current: localRef.current }, { focusable: true });
+    if (autoFocus && typeof fm.setInitialFocus === 'function') {
       // schedule after mount to ensure element is present
-      requestAnimationFrame(() => setInitialFocus(id));
+      requestAnimationFrame(() => fm.setInitialFocus(id));
     }
     return unregister;
-  }, [id, register, setInitialFocus, autoFocus]);
+  }, [id, fm, autoFocus]);
 
-  // Auto-focus if requested even without FocusManager id
+  // Auto-focus if requested even without FocusManager id (fallback for missing provider)
   useEffect(() => {
     if (autoFocus && !id) {
       requestAnimationFrame(() => {
@@ -101,9 +101,9 @@ const TVFocusable = forwardRef(function TVFocusable(
   const activate = useCallback(
     (e) => {
       if (typeof onSelect === 'function') {
-        // Only prevent defaults for handled activation events
+        // Only prevent defaults for handled activation/click events
         try { e.preventDefault(); } catch { /* noop */ }
-        try { e.stopPropagation(); } catch { /* noop */ }
+        // Do not stopPropagation globally; allow row/modals to hear events if needed
         debugLog('TVFocusable', 'onSelect', { id, type: e?.type });
         onSelect(e);
       }
@@ -127,7 +127,7 @@ const TVFocusable = forwardRef(function TVFocusable(
 
   const handleClick = useCallback(
     (e) => {
-      // Mouse/touch click support for parity
+      // Mouse/touch click support for parity and fallback when FocusManager is unavailable
       if (typeof onSelect === 'function') {
         activate(e);
       }

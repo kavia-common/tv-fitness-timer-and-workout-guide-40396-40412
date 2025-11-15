@@ -52,24 +52,30 @@ export default function useDpadNavigation(options) {
     if (typeof getRef === 'function') {
       const ref = getRef(r, c);
       const el = ref && ref.current;
-      if (el && el.scrollIntoView) {
-        // Use smooth scroll and try to center in view horizontally
-        try {
-          el.scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' });
-        } catch {
-          el.scrollIntoView({ block: 'nearest', inline: 'center' });
+      if (el) {
+        if (typeof el.scrollIntoView === 'function') {
+          // Use smooth scroll and try to center in view horizontally
+          try {
+            el.scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' });
+          } catch {
+            try {
+              el.scrollIntoView({ block: 'nearest', inline: 'center' });
+            } catch {
+              /* ignore */
+            }
+          }
         }
-      }
-      if (el && typeof el.focus === 'function') {
-        // delay to align with scroll
-        requestAnimationFrame(() => {
-          try { el.focus(); } catch { /* noop */ }
-        });
+        if (typeof el.focus === 'function') {
+          // delay to align with scroll
+          requestAnimationFrame(() => {
+            try { el.focus(); } catch { /* noop */ }
+          });
+        }
       }
     }
   }, [getRef]);
 
-  const clamp = (val, min, max) => Math.max(min, Math.min(max, val));
+  const clampVal = (val, min, max) => Math.max(min, Math.min(max, val));
 
   const handleArrow = useCallback((key) => {
     let nextRow = focusedRowIndex;
@@ -89,8 +95,8 @@ export default function useDpadNavigation(options) {
       if (nextCol >= colCount) nextCol = loop ? 0 : colCount - 1;
     }
 
-    nextRow = clamp(nextRow, 0, Math.max(0, (rowCount || 1) - 1));
-    nextCol = clamp(nextCol, 0, Math.max(0, (colCount || 1) - 1));
+    nextRow = clampVal(nextRow, 0, Math.max(0, (rowCount || 1) - 1));
+    nextCol = clampVal(nextCol, 0, Math.max(0, (colCount || 1) - 1));
     debugLog('useDpad', 'arrow', key, '->', { nextRow, nextCol });
     setFocused(nextRow, nextCol);
   }, [focusedRowIndex, focusedColIndex, loop, rowCount, colCount, setFocused]);
@@ -98,14 +104,14 @@ export default function useDpadNavigation(options) {
   const onKeyDown = useCallback((e) => {
     const norm = normalizeTVKey(e);
     if (isArrow(norm)) {
-      e.preventDefault();
-      e.stopPropagation();
+      try { e.preventDefault(); } catch { /* noop */ }
+      try { e.stopPropagation(); } catch { /* noop */ }
       handleArrow(norm);
       return;
     }
     if (isActivationKey(norm)) {
-      e.preventDefault();
-      e.stopPropagation();
+      try { e.preventDefault(); } catch { /* noop */ }
+      try { e.stopPropagation(); } catch { /* noop */ }
       if (typeof onEnter === 'function') {
         debugLog('useDpad', 'enter', { focusedRowIndex, focusedColIndex });
         onEnter(focusedRowIndex, focusedColIndex);
@@ -113,8 +119,8 @@ export default function useDpadNavigation(options) {
       return;
     }
     if (isBackKey(norm)) {
-      e.preventDefault();
-      e.stopPropagation();
+      try { e.preventDefault(); } catch { /* noop */ }
+      try { e.stopPropagation(); } catch { /* noop */ }
       if (typeof onBack === 'function') {
         debugLog('useDpad', 'back', { focusedRowIndex, focusedColIndex });
         onBack(focusedRowIndex, focusedColIndex);

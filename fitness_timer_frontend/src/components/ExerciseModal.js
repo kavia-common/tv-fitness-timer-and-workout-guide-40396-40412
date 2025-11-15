@@ -28,7 +28,7 @@ export default function ExerciseModal({ exercise, onClose, initialFocusId = 'exe
     if (!containerRef.current) return [];
     const nodes = containerRef.current.querySelectorAll('[data-focusable="true"], button, [tabindex]');
     focusablesRef.current = Array.from(nodes).filter((el) => {
-      const ti = (el.getAttribute('tabindex') || '0') * 1;
+      const ti = Number(el.getAttribute('tabindex') || '0');
       const disabled = el.hasAttribute('disabled') || el.getAttribute('aria-disabled') === 'true';
       return !disabled && (ti >= 0 || el.tagName === 'BUTTON');
     });
@@ -43,28 +43,33 @@ export default function ExerciseModal({ exercise, onClose, initialFocusId = 'exe
       // Try focusing a preferred element
       const container = containerRef.current;
       const target = (container && container.querySelector(`[data-focus-id="${initialFocusId}"]`)) || f[0];
-      if (target && typeof target.focus === 'function') target.focus();
+      try {
+        if (target && typeof target.focus === 'function') target.focus();
+      } catch {
+        /* ignore */
+      }
       debugLog('Modal', 'initial focus set', target?.getAttribute?.('data-focus-id') || target?.id);
     }, 0);
 
     return () => clearTimeout(t);
   }, [collectFocusable, initialFocusId]);
 
-  // Key handler for trapping and Back to close
+  // Key handler for trapping and Back to close - only attach while modal is mounted
   useEffect(() => {
+    if (!exercise) return undefined;
     if (listenerAttachedRef.current) return undefined;
 
     const onKeyDown = (e) => {
       const k = normalizeTVKey(e);
       if (isBackKey(k)) {
-        e.preventDefault();
-        e.stopPropagation();
+        try { e.preventDefault(); } catch { /* noop */ }
+        try { e.stopPropagation(); } catch { /* noop */ }
         debugLog('Modal', 'back to close');
         if (typeof onClose === 'function') onClose();
         return;
       }
 
-      // Trap focus navigation horizontally between the first row of focusables
+      // Trap focus navigation horizontally between first row of focusables
       if (isArrow(k)) {
         const f = collectFocusable();
         if (!f.length) return;
@@ -76,14 +81,14 @@ export default function ExerciseModal({ exercise, onClose, initialFocusId = 'exe
           if (k === 'ArrowRight') nextIdx = Math.min(f.length - 1, idx + 1);
           if (k === 'ArrowLeft') nextIdx = Math.max(0, idx - 1);
           if (nextIdx !== idx) {
-            e.preventDefault();
-            e.stopPropagation();
-            f[nextIdx].focus();
+            try { e.preventDefault(); } catch { /* noop */ }
+            try { e.stopPropagation(); } catch { /* noop */ }
+            try { f[nextIdx].focus(); } catch { /* noop */ }
           }
         } else {
-          e.preventDefault();
-          e.stopPropagation();
-          f[0].focus();
+          try { e.preventDefault(); } catch { /* noop */ }
+          try { e.stopPropagation(); } catch { /* noop */ }
+          try { f[0].focus(); } catch { /* noop */ }
         }
       }
     };
@@ -101,7 +106,7 @@ export default function ExerciseModal({ exercise, onClose, initialFocusId = 'exe
         /* ignore */
       }
     };
-  }, [onClose, collectFocusable]);
+  }, [exercise, onClose, collectFocusable]);
 
   if (!exercise) return null;
 

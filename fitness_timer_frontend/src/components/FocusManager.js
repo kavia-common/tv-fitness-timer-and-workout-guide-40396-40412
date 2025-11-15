@@ -21,6 +21,7 @@ const FocusManagerContext = createContext({
   setInitialFocus: () => {},
   setFocus: () => {},
   getFocus: () => null,
+  getCurrentDom: () => null,
   currentId: null,
 });
 
@@ -63,19 +64,27 @@ export function FocusManagerProvider({ children, initialFocusId = null }) {
     (id) => {
       setCurrentId(id);
       const entry = getById(id);
-      if (entry && entry.ref?.current) {
+      const node = entry?.ref?.current;
+      if (node) {
         requestAnimationFrame(() => {
+          // Robust scrollIntoView with guards
           try {
-            entry.ref.current.scrollIntoView({
-              block: 'nearest',
-              inline: 'nearest',
-              behavior: 'smooth',
-            });
+            if (typeof node.scrollIntoView === 'function') {
+              node.scrollIntoView({
+                block: 'nearest',
+                inline: 'nearest',
+                behavior: 'smooth',
+              });
+            }
           } catch {
-            entry.ref.current.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+            try {
+              node.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+            } catch {
+              /* ignore */
+            }
           }
           try {
-            entry.ref.current.focus();
+            if (typeof node.focus === 'function') node.focus();
           } catch {
             /* ignore */
           }
@@ -112,22 +121,29 @@ export function FocusManagerProvider({ children, initialFocusId = null }) {
     if (nextIndex < 0) nextIndex = 0;
     if (nextIndex >= entries.length) nextIndex = entries.length - 1;
     const next = entries[nextIndex];
-    if (next && next.ref?.current) {
+    const node = next?.ref?.current;
+    if (next && node) {
       setCurrentId(next.id);
       try {
-        next.ref.current.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'smooth' });
+        if (typeof node.scrollIntoView === 'function') {
+          node.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'smooth' });
+        }
       } catch {
-        next.ref.current.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+        try {
+          node.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+        } catch {
+          /* ignore */
+        }
       }
       try {
-        next.ref.current.focus();
+        if (typeof node.focus === 'function') node.focus();
       } catch {
         /* ignore */
       }
     }
   };
 
-  // Central keydown router: attach once, capture phase, prevent default only for handled keys.
+  // Central keydown router: attach once, capture phase, prevent default only for handled arrow keys.
   useEffect(() => {
     if (listenerAttachedRef.current) return undefined;
 
@@ -167,6 +183,10 @@ export function FocusManagerProvider({ children, initialFocusId = null }) {
   }, []);
 
   const getFocus = useCallback(() => currentId, [currentId]);
+  const getCurrentDom = useCallback(() => {
+    const entry = getById(currentId);
+    return entry?.ref?.current || null;
+  }, [currentId, getById]);
 
   const value = useMemo(
     () => ({
@@ -174,9 +194,10 @@ export function FocusManagerProvider({ children, initialFocusId = null }) {
       setInitialFocus,
       setFocus,
       getFocus,
+      getCurrentDom,
       currentId,
     }),
-    [register, setInitialFocus, setFocus, getFocus, currentId]
+    [register, setInitialFocus, setFocus, getFocus, getCurrentDom, currentId]
   );
 
   return <FocusManagerContext.Provider value={value}>{children}</FocusManagerContext.Provider>;
@@ -223,8 +244,8 @@ export function Focusable({
   const child = React.Children.only(children);
   return React.cloneElement(child, {
     ref,
-    role,
-    tabIndex,
+    role: role || 'button',
+    tabIndex: typeof tabIndex === 'number' ? tabIndex : 0,
     className: `${className} focus-visible-outline`.trim(),
     ...rest,
   });
