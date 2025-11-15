@@ -65,6 +65,8 @@ export default function TimerControls({
         id="timer-btn-playpause"
         as="button"
         className="btn"
+        role="button"
+        tabIndex={0}
         aria-label={isRunning ? 'Pause timer' : 'Start timer'}
         onSelect={isRunning ? onPause : onPlay}
       >

@@ -103,17 +103,18 @@ export function FocusManagerProvider({ children, initialFocusId = null }) {
     const onKeyDown = (e) => {
       const k = normalizeTVKey(e);
       if (!isArrow(k)) return;
-      // provide lightweight default behavior if nothing else prevented it
+      // prevent native scroll; handled here
+      e.preventDefault();
+      e.stopPropagation();
       if (k === 'ArrowRight' || k === 'ArrowDown') {
-        e.preventDefault();
         moveFocus(1);
       } else if (k === 'ArrowLeft' || k === 'ArrowUp') {
-        e.preventDefault();
         moveFocus(-1);
       }
     };
-    window.addEventListener('keydown', onKeyDown);
-    return () => window.removeEventListener('keydown', onKeyDown);
+    // Capture to run before document scrolling
+    window.addEventListener('keydown', onKeyDown, true);
+    return () => window.removeEventListener('keydown', onKeyDown, true);
   }, [currentId]);
 
   const getFocus = useCallback(() => currentId, [currentId]);

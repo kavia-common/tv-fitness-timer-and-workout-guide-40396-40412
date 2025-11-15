@@ -15,6 +15,7 @@ import { useFocusManager } from './FocusManager';
  * - Handles Enter/OK/Space to invoke onSelect callback.
  * - Safely merges refs between parent forwardRef, focus ring hook, and child element.
  * - Sets role/tabIndex for accessibility and D-pad focusability.
+ * - Also wires mouse/touch click to onSelect for desktop users.
  *
  * Props:
  * - id?: string            - identifier used by FocusManager for programmatic focus
@@ -23,10 +24,11 @@ import { useFocusManager } from './FocusManager';
  * - tabIndex?: number      - focus order (default 0)
  * - className?: string
  * - autoFocus?: boolean    - request initial focus on mount (default false)
- * - onSelect?: (event) => void - invoked on Enter/OK/Space
+ * - onSelect?: (event) => void - invoked on Enter/OK/Space/Click
  * - onKeyDown?: (event) => void - additional keydown handler
  * - onFocus?: (event) => void
  * - onBlur?: (event) => void
+ * - ariaLabel?: string     - optional aria-label for screen readers
  * - ...rest: any other props passed to the underlying element
  *
  * Usage:
@@ -47,6 +49,7 @@ const TVFocusable = forwardRef(function TVFocusable(
     onKeyDown,
     onFocus,
     onBlur,
+    ariaLabel,
     children,
     ...rest
   },
@@ -94,23 +97,40 @@ const TVFocusable = forwardRef(function TVFocusable(
     }
   }, [autoFocus, id, focusRingFocus]);
 
+  const activate = useCallback(
+    (e) => {
+      if (typeof onSelect === 'function') {
+        e.preventDefault();
+        e.stopPropagation();
+        onSelect(e);
+      }
+    },
+    [onSelect]
+  );
+
   const handleKeyDown = useCallback(
     (e) => {
       const norm = normalizeTVKey(e);
       if (isActivationKey(norm)) {
         // Activate/select on Enter/OK/Space
-        if (typeof onSelect === 'function') {
-          e.preventDefault();
-          e.stopPropagation();
-          onSelect(e);
-          return;
-        }
+        activate(e);
+        return;
       }
       if (typeof onKeyDown === 'function') {
         onKeyDown(e);
       }
     },
-    [onSelect, onKeyDown]
+    [activate, onKeyDown]
+  );
+
+  const handleClick = useCallback(
+    (e) => {
+      // Mouse/touch click support for parity
+      if (typeof onSelect === 'function') {
+        activate(e);
+      }
+    },
+    [activate, onSelect]
   );
 
   const handleFocus = useCallback(
@@ -134,17 +154,24 @@ const TVFocusable = forwardRef(function TVFocusable(
     return `${className} ${base}`.trim();
   }, [className]);
 
+  // Default A11Y props
+  const a11y = {
+    role: role || 'button',
+    tabIndex: typeof tabIndex === 'number' ? tabIndex : 0,
+    'aria-label': ariaLabel || rest['aria-label'],
+  };
+
   return (
     <Component
       ref={setRefs}
-      role={role}
-      tabIndex={tabIndex}
+      {...a11y}
       className={mergedClassName}
       data-focusable="true"
       data-focus-id={id || undefined}
       onKeyDown={handleKeyDown}
       onFocus={handleFocus}
       onBlur={handleBlur}
+      onClick={handleClick}
       {...rest}
     >
       {children}

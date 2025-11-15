@@ -89,7 +89,8 @@ function App() {
 
             <TVFocusable
               id="hero-quick-hiit"
-              role="listitem"
+              role="button"
+              ariaLabel="Start Quick HIIT, 10 minutes, High intensity"
               className="tv-card"
               style={{ padding: 'var(--space-6)' }}
               tabIndex={0}
@@ -103,7 +104,8 @@ function App() {
 
             <TVFocusable
               id="hero-core-starter"
-              role="listitem"
+              role="button"
+              ariaLabel="Start Core Starter, 8 minutes, Beginner"
               className="tv-card"
               style={{ padding: 'var(--space-6)' }}
               tabIndex={0}

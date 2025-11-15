@@ -66,6 +66,14 @@ body {
   box-shadow: var(--focus-ring-shadow);
 }
 
+/* Pointer hover/click feedback for mouse users */
+[data-focusable="true"]:hover {
+  filter: brightness(1.02);
+}
+[data-focusable="true"]:active {
+  transform: translateY(0.5px) scale(0.995);
+}
+
 /* Reusable card class for surfaces */
 .card {
   background: var(--color-surface);

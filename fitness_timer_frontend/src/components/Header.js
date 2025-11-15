@@ -42,6 +42,9 @@ export default function Header({ theme, onToggleTheme }) {
         justifyContent: 'space-between',
         paddingTop: 'var(--space-6)',
         paddingBottom: 'var(--space-6)',
+        // Subtle glass blur header
+        backdropFilter: 'saturate(160%) blur(10px)',
+        WebkitBackdropFilter: 'saturate(160%) blur(10px)',
       }}
     >
       <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)' }}>
@@ -52,7 +55,7 @@ export default function Header({ theme, onToggleTheme }) {
             height: 36,
             borderRadius: '50%',
             background: 'linear-gradient(135deg, var(--color-primary), var(--color-secondary))',
-            boxShadow: 'var(--shadow-sm)',
+            boxShadow: 'var(--shadow-md)',
           }}
         />
         <div>
@@ -72,12 +75,12 @@ export default function Header({ theme, onToggleTheme }) {
       </div>
 
       <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)' }}>
-        <TVFocusable id="header-start-btn" autoFocus as="button" className="btn" aria-label="Start Quick Timer" onSelect={() => { /* hook up to timer start when implemented */ }}>
+        <TVFocusable id="header-start-btn" autoFocus as="button" className="btn" role="button" tabIndex={0} aria-label="Start Quick Timer" onSelect={() => { /* hook up to timer start when implemented */ }}>
           <Icon src={require('../assets/icons/play.svg')} label="Start" fallback="▶" size={20} />
           <span>Start</span>
         </TVFocusable>
 
-        <TVFocusable id="header-browse-btn" as="button" className="btn btn-surface" aria-label="Browse Exercises" onSelect={() => { /* hook up to navigation when implemented */ }}>
+        <TVFocusable id="header-browse-btn" as="button" className="btn btn-surface" role="button" tabIndex={0} aria-label="Browse Exercises" onSelect={() => { /* hook up to navigation when implemented */ }}>
           Browse
         </TVFocusable>
 
@@ -85,12 +88,18 @@ export default function Header({ theme, onToggleTheme }) {
           id="header-theme-btn"
           as="button"
           className="btn btn-surface"
+          role="button"
+          tabIndex={0}
           aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
           onSelect={onToggleTheme}
         >
           {theme === 'light' ? '🌙 Dark' : '☀️ Light'}
         </TVFocusable>
       </div>
+      <style>{`
+        header .btn:hover { transform: translateY(-2px) scale(1.01); }
+        header .btn:active { transform: translateY(0) scale(0.99); }
+      `}</style>
     </header>
   );
 }

@@ -53,6 +53,7 @@ export default function ExerciseCard({
       id={id}
       role="button"
       tabIndex={0}
+      ariaLabel={`${name}${subtitle ? `, ${subtitle}` : ''}`}
       className={`exercise-card tv-card ${className}`.trim()}
       onSelect={onSelect}
       style={{
@@ -63,7 +64,7 @@ export default function ExerciseCard({
         overflow: 'hidden',
         minHeight: 220,
         // Focus animation: subtle scale + elevate shadow
-        transition: 'transform var(--transition-med), box-shadow var(--transition-med), border-color var(--transition-med), background var(--transition-med)',
+        transition: 'transform var(--transition-med), box-shadow var(--transition-med), border-color var(--transition-med), background var(--transition-med), filter var(--transition-med)',
         backgroundColor: 'var(--color-surface)',
         position: 'relative',
         ...backgroundStyle,

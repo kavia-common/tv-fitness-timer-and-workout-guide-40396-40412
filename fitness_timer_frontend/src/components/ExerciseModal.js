@@ -101,7 +101,8 @@ export default function ExerciseModal({ exercise, onClose, initialFocusId = 'exe
         zIndex: 9999,
         display: 'grid',
         gridTemplateRows: 'auto 1fr',
-        background: 'linear-gradient(180deg, rgba(17,24,39,0.65), rgba(17,24,39,0.92))',
+        // Polished modal backdrop with vignette
+        background: 'radial-gradient(1200px 600px at 50% -10%, rgba(37,99,235,0.15) 0%, rgba(17,24,39,0.85) 50%, rgba(17,24,39,0.95) 100%)',
         color: '#fff',
         overflow: 'hidden',
       }}
