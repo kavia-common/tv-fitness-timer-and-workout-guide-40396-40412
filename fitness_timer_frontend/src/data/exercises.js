@@ -184,7 +184,7 @@ export const EXERCISE_SECTIONS = [
         description: 'Full-body cardio move combining squat, plank, and jump.',
         difficulty: 'Advanced',
         equipment: 'None',
-        thumbnail: gradientBadge('#EF4444', '#F59E0B'),
+        thumbnail: '/assets/burpees-poster.jpeg',
         tags: ['hiit', 'full-body', 'intense'],
       },
       {
@@ -195,7 +195,7 @@ export const EXERCISE_SECTIONS = [
         description: 'Core and cardio move—drive knees toward chest from plank position.',
         difficulty: 'Intermediate',
         equipment: 'None',
-        thumbnail: gradientBadge('#2563EB', '#10B981'),
+        thumbnail: '/assets/mountain-climbers-poster.jpeg',
         tags: ['hiit', 'core', 'cardio'],
       },
       {
@@ -206,7 +206,7 @@ export const EXERCISE_SECTIONS = [
         description: 'Quick steps in place, maintain athletic posture and rhythm.',
         difficulty: 'Beginner',
         equipment: 'None',
-        thumbnail: gradientKeys.amberWave,
+        thumbnail: '/assets/fast-feet-poster.jpeg',
         tags: ['agility', 'low-impact', 'cardio'],
       },
       {
@@ -217,7 +217,7 @@ export const EXERCISE_SECTIONS = [
         description: 'Steady jog or brisk march in place; keep light on your feet.',
         difficulty: 'Beginner',
         equipment: 'None',
-        thumbnail: gradientBadge('#60A5FA', '#34D399'),
+        thumbnail: '/assets/jog-in-place-poster.jpeg',
         tags: ['steady-state', 'low-impact', 'cardio'],
       },
       {
@@ -228,7 +228,7 @@ export const EXERCISE_SECTIONS = [
         description: 'Lateral hops with soft landings—stabilize through hips and core.',
         difficulty: 'Intermediate',
         equipment: 'None',
-        thumbnail: gradientBadge('#0EA5E9', '#F59E0B'),
+        thumbnail: '/assets/skater-hops-poster.jpeg',
         tags: ['lateral', 'balance', 'cardio'],
       },
     ],
