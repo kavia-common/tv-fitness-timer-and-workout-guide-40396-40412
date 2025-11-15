@@ -60,7 +60,7 @@ export const EXERCISE_SECTIONS = [
         description: 'Full-body warm-up elevating heart rate and warming major muscle groups.',
         difficulty: 'Beginner',
         equipment: 'None',
-        thumbnail: gradientBadge('#60A5FA', '#F59E0B'),
+        thumbnail: '/assets/jumping-jacks-poster.jpeg',
         tags: ['cardio', 'dynamic', 'warmup'],
       },
       {

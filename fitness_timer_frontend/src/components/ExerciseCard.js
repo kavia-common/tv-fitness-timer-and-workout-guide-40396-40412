@@ -42,8 +42,15 @@ export default function ExerciseCard({
           return {};
       }
     }
-    if (typeof thumbnail === 'string' && thumbnail.startsWith('data:image')) {
-      return { backgroundImage: `url(${thumbnail})`, backgroundSize: 'cover', backgroundPosition: 'center' };
+    // Support data URLs and local/public asset paths such as "/assets/..."
+    if (typeof thumbnail === 'string') {
+      // Render using a background image to get object-fit: cover-like behavior
+      return {
+        backgroundImage: `url(${thumbnail})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+      };
     }
     return {};
   }, [thumbnail]);
@@ -68,6 +75,8 @@ export default function ExerciseCard({
         backgroundColor: 'var(--color-surface)',
         position: 'relative',
         boxShadow: 'var(--shadow-sm)',
+        // When using image background, ensure crisp edges and proper cover fit
+        imageRendering: 'auto',
         ...backgroundStyle,
         ...style,
       }}
@@ -81,6 +90,7 @@ export default function ExerciseCard({
           background:
             'linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.22) 45%, rgba(0,0,0,0.35) 100%)',
           pointerEvents: 'none',
+          zIndex: 1,
         }}
       />
       <div
@@ -89,6 +99,7 @@ export default function ExerciseCard({
           padding: 'var(--space-6)',
           color: '#fff',
           textShadow: '0 2px 8px rgba(0,0,0,0.35)',
+          zIndex: 2,
         }}
       >
         <div
