@@ -71,7 +71,7 @@ export const EXERCISE_SECTIONS = [
         description: 'Loosen shoulders and upper back with controlled forward/backward circles.',
         difficulty: 'Beginner',
         equipment: 'None',
-        thumbnail: gradientBadge('#93C5FD', '#34D399'),
+        thumbnail: '/assets/arm-circles-poster.jpeg',
         tags: ['mobility', 'upper-body', 'warmup'],
       },
       {
@@ -82,7 +82,7 @@ export const EXERCISE_SECTIONS = [
         description: 'March or lightly jog in place lifting knees to hip height.',
         difficulty: 'Beginner',
         equipment: 'None',
-        thumbnail: gradientKeys.ocean,
+        thumbnail: '/assets/high-knees-poster.jpeg',
         tags: ['cardio', 'low-impact', 'warmup'],
       },
       {
@@ -93,7 +93,7 @@ export const EXERCISE_SECTIONS = [
         description: 'Controlled hip circles and leg swings to mobilize hips.',
         difficulty: 'Beginner',
         equipment: 'Optional',
-        thumbnail: gradientBadge('#2563EB', '#10B981'),
+        thumbnail: '/assets/hip-openers-poster.jpeg',
         tags: ['mobility', 'lower-body', 'warmup'],
       },
     ],
