@@ -1,6 +1,30 @@
 import React from 'react';
 import TVFocusable from './TVFocusable';
 
+// Small icon helper with fallback
+function Icon({ src, label, fallback, size = 20 }) {
+  return (
+    <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: size, height: size }}>
+      <img
+        src={src}
+        alt={label}
+        aria-hidden="true"
+        width={size}
+        height={size}
+        onError={(e) => {
+          e.currentTarget.style.display = 'none';
+          const span = document.createElement('span');
+          span.textContent = fallback;
+          span.style.fontSize = '1.0em';
+          span.style.lineHeight = '1';
+          e.currentTarget.parentElement.appendChild(span);
+        }}
+        style={{ display: 'block' }}
+      />
+    </span>
+  );
+}
+
 /**
  * PUBLIC_INTERFACE
  * Header
@@ -49,7 +73,8 @@ export default function Header({ theme, onToggleTheme }) {
 
       <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)' }}>
         <TVFocusable id="header-start-btn" autoFocus as="button" className="btn" aria-label="Start Quick Timer" onSelect={() => { /* hook up to timer start when implemented */ }}>
-          ▶ Start
+          <Icon src={require('../assets/icons/play.svg')} label="Start" fallback="▶" size={20} />
+          <span>Start</span>
         </TVFocusable>
 
         <TVFocusable id="header-browse-btn" as="button" className="btn btn-surface" aria-label="Browse Exercises" onSelect={() => { /* hook up to navigation when implemented */ }}>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="28" height="28" viewBox="0 0 28 28" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Play">
+  <title>Play</title>
+  <desc>High-contrast play icon for TV controls</desc>
+  <g fill="none" fill-rule="evenodd">
+    <circle cx="14" cy="14" r="13" fill="black" opacity="0.15"/>
+    <path d="M10 8.8v10.4c0 .66.71 1.07 1.28.74l9.04-5.2a.85.85 0 0 0 0-1.48l-9.04-5.2A.85.85 0 0 0 10 8.8z" fill="#ffffff"/>
+  </g>
+</svg>

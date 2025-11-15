@@ -124,6 +124,7 @@
   letter-spacing: 0.2px;
   transition: transform var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast), border-color var(--transition-fast);
   will-change: transform, box-shadow;
+  line-height: 1;
 }
 
 .btn:hover {

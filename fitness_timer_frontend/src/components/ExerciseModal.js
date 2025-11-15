@@ -133,7 +133,25 @@ export default function ExerciseModal({ exercise, onClose, initialFocusId = 'exe
           aria-label="Close"
           onSelect={onClose}
         >
-          ⬅ Back
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+            <span style={{ display: 'inline-flex', width: 20, height: 20, alignItems: 'center', justifyContent: 'center' }}>
+              <img
+                src={require('../assets/icons/arrow.svg')}
+                alt="Back"
+                aria-hidden="true"
+                width={20}
+                height={20}
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none';
+                  const span = document.createElement('span');
+                  span.textContent = '⬅';
+                  span.style.fontSize = '1.0em';
+                  e.currentTarget.parentElement.appendChild(span);
+                }}
+              />
+            </span>
+            <span>Back</span>
+          </span>
         </TVFocusable>
       </div>
 

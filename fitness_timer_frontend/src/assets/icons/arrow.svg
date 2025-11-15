@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="28" height="28" viewBox="0 0 28 28" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Arrow">
+  <title>Arrow</title>
+  <desc>High-contrast arrow for navigation/back</desc>
+  <g fill="none" fill-rule="evenodd">
+    <circle cx="14" cy="14" r="13" fill="black" opacity="0.15"/>
+    <path d="M16.8 8.8L11.6 14l5.2 5.2" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  </g>
+</svg>
