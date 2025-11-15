@@ -1,0 +1,4 @@
+{
+    "command": "npm run test",
+    "working_directory": "/home/kavia/workspace/code-generation/tv-fitness-timer-and-workout-guide-40396-40412/fitness_timer_frontend"
+}
