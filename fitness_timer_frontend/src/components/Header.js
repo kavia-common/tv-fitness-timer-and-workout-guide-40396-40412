@@ -1,5 +1,5 @@
 import React from 'react';
-import { Focusable } from './FocusManager';
+import TVFocusable from './TVFocusable';
 
 /**
  * PUBLIC_INTERFACE
@@ -48,25 +48,23 @@ export default function Header({ theme, onToggleTheme }) {
       </div>
 
       <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)' }}>
-        <Focusable id="header-start-btn" autoFocus>
-          <button className="btn" aria-label="Start Quick Timer">
-            ▶ Start
-          </button>
-        </Focusable>
-        <Focusable id="header-browse-btn">
-          <button className="btn btn-surface" aria-label="Browse Exercises">
-            Browse
-          </button>
-        </Focusable>
-        <Focusable id="header-theme-btn">
-          <button
-            className="btn btn-surface"
-            onClick={onToggleTheme}
-            aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
-          >
-            {theme === 'light' ? '🌙 Dark' : '☀️ Light'}
-          </button>
-        </Focusable>
+        <TVFocusable id="header-start-btn" autoFocus as="button" className="btn" aria-label="Start Quick Timer" onSelect={() => { /* hook up to timer start when implemented */ }}>
+          ▶ Start
+        </TVFocusable>
+
+        <TVFocusable id="header-browse-btn" as="button" className="btn btn-surface" aria-label="Browse Exercises" onSelect={() => { /* hook up to navigation when implemented */ }}>
+          Browse
+        </TVFocusable>
+
+        <TVFocusable
+          id="header-theme-btn"
+          as="button"
+          className="btn btn-surface"
+          aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+          onSelect={onToggleTheme}
+        >
+          {theme === 'light' ? '🌙 Dark' : '☀️ Light'}
+        </TVFocusable>
       </div>
     </header>
   );

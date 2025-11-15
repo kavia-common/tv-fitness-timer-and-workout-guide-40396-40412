@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './App.css';
 import ScreenWrapper from './components/ScreenWrapper';
 import Header from './components/Header';
+import TVFocusable from './components/TVFocusable';
 
 /**
  * PUBLIC_INTERFACE
@@ -48,18 +49,41 @@ function App() {
               gap: 'var(--space-6)',
             }}
           >
-            <div role="listitem" className="tv-card" style={{ padding: 'var(--space-6)' }} tabIndex={0}>
+            <TVFocusable
+              id="hero-quick-hiit"
+              role="listitem"
+              className="tv-card"
+              style={{ padding: 'var(--space-6)' }}
+              tabIndex={0}
+              onSelect={() => { /* hook to start Quick HIIT */ }}
+            >
               <div className="h3">Quick HIIT</div>
               <div style={{ color: 'var(--color-text-secondary)' }}>10 min • High intensity</div>
-            </div>
-            <div role="listitem" className="tv-card" style={{ padding: 'var(--space-6)' }} tabIndex={0}>
+            </TVFocusable>
+
+            <TVFocusable
+              id="hero-core-starter"
+              role="listitem"
+              className="tv-card"
+              style={{ padding: 'var(--space-6)' }}
+              tabIndex={0}
+              onSelect={() => { /* hook to start Core Starter */ }}
+            >
               <div className="h3">Core Starter</div>
               <div style={{ color: 'var(--color-text-secondary)' }}>8 min • Beginner</div>
-            </div>
-            <div role="listitem" className="tv-card" style={{ padding: 'var(--space-6)' }} tabIndex={0}>
+            </TVFocusable>
+
+            <TVFocusable
+              id="hero-full-body"
+              role="listitem"
+              className="tv-card"
+              style={{ padding: 'var(--space-6)' }}
+              tabIndex={0}
+              onSelect={() => { /* hook to start Full Body */ }}
+            >
               <div className="h3">Full Body</div>
               <div style={{ color: 'var(--color-text-secondary)' }}>20 min • Mixed</div>
-            </div>
+            </TVFocusable>
           </div>
         </section>
 
@@ -78,12 +102,20 @@ function App() {
             }}
           >
             {['Push-ups', 'Squats', 'Plank', 'Burpees', 'Lunges', 'Mountain Climbers'].map((name) => (
-              <div key={name} role="listitem" className="tv-card" style={{ padding: 'var(--space-6)' }} tabIndex={0}>
+              <TVFocusable
+                key={name}
+                id={`exercise-${name.toLowerCase().replace(/\\s+/g, '-')}`}
+                role="listitem"
+                className="tv-card"
+                style={{ padding: 'var(--space-6)' }}
+                tabIndex={0}
+                onSelect={() => { /* hook to open exercise details or start timer */ }}
+              >
                 <div className="h3" style={{ marginBottom: 'var(--space-2)' }}>
                   {name}
                 </div>
                 <div style={{ color: 'var(--color-text-secondary)' }}>Beginner • Bodyweight</div>
-              </div>
+              </TVFocusable>
             ))}
           </div>
         </section>
