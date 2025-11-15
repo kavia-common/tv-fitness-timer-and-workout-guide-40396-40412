@@ -1,8 +1,13 @@
 import { render, screen } from '@testing-library/react';
 import App from './App';
 
-test('renders learn react link', () => {
+test('renders app title and a section heading', () => {
   render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+
+  // App title/header text from Header component
+  expect(screen.getByText(/Fitness TV/i)).toBeInTheDocument();
+
+  // At least one exercise section heading from EXERCISE_SECTIONS
+  // Using "Warm-up" as it exists in src/data/exercises.js
+  expect(screen.getByRole('heading', { name: /Warm-up/i })).toBeInTheDocument();
 });
