@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { normalizeTVKey, isArrow, isActivationKey, isBackKey } from '../utils/tvKeyMap';
+import { debugLog } from '../utils/debug';
 
 /**
  * PUBLIC_INTERFACE
@@ -42,6 +43,7 @@ export default function useDpadNavigation(options) {
   const [focusedRowIndex, setFocusedRowIndex] = useState(initialRow);
   const [focusedColIndex, setFocusedColIndex] = useState(initialCol);
   const containerRef = useRef(null);
+  const listenerAttachedRef = useRef(false);
 
   const setFocused = useCallback((r, c) => {
     setFocusedRowIndex(r);
@@ -60,7 +62,9 @@ export default function useDpadNavigation(options) {
       }
       if (el && typeof el.focus === 'function') {
         // delay to align with scroll
-        requestAnimationFrame(() => el.focus());
+        requestAnimationFrame(() => {
+          try { el.focus(); } catch { /* noop */ }
+        });
       }
     }
   }, [getRef]);
@@ -87,35 +91,51 @@ export default function useDpadNavigation(options) {
 
     nextRow = clamp(nextRow, 0, Math.max(0, (rowCount || 1) - 1));
     nextCol = clamp(nextCol, 0, Math.max(0, (colCount || 1) - 1));
+    debugLog('useDpad', 'arrow', key, '->', { nextRow, nextCol });
     setFocused(nextRow, nextCol);
   }, [focusedRowIndex, focusedColIndex, loop, rowCount, colCount, setFocused]);
 
   const onKeyDown = useCallback((e) => {
     const norm = normalizeTVKey(e);
-    if (isArrow(norm) || isActivationKey(norm) || isBackKey(norm)) {
+    if (isArrow(norm)) {
       e.preventDefault();
       e.stopPropagation();
-    }
-    if (isArrow(norm)) {
       handleArrow(norm);
       return;
     }
     if (isActivationKey(norm)) {
+      e.preventDefault();
+      e.stopPropagation();
       if (typeof onEnter === 'function') {
+        debugLog('useDpad', 'enter', { focusedRowIndex, focusedColIndex });
         onEnter(focusedRowIndex, focusedColIndex);
       }
       return;
     }
     if (isBackKey(norm)) {
+      e.preventDefault();
+      e.stopPropagation();
       if (typeof onBack === 'function') {
+        debugLog('useDpad', 'back', { focusedRowIndex, focusedColIndex });
         onBack(focusedRowIndex, focusedColIndex);
       }
     }
   }, [handleArrow, onEnter, onBack, focusedRowIndex, focusedColIndex]);
 
   useEffect(() => {
-    window.addEventListener('keydown', onKeyDown);
-    return () => window.removeEventListener('keydown', onKeyDown);
+    if (listenerAttachedRef.current) return undefined;
+    window.addEventListener('keydown', onKeyDown, true); // capture to out-prioritize default scrolling
+    listenerAttachedRef.current = true;
+    debugLog('useDpad', 'listener attached');
+    return () => {
+      try {
+        window.removeEventListener('keydown', onKeyDown, true);
+        listenerAttachedRef.current = false;
+        debugLog('useDpad', 'listener removed');
+      } catch {
+        /* ignore */
+      }
+    };
   }, [onKeyDown]);
 
   return {

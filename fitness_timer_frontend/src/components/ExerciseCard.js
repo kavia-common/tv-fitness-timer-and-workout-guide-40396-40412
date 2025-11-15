@@ -65,7 +65,7 @@ export default function ExerciseCard({
       id={id}
       role="button"
       tabIndex={0}
-      ariaLabel={`${name}${subtitle ? `, ${subtitle}` : ''}`}
+      ariaLabel={`${name || ''}${subtitle ? `, ${subtitle}` : ''}`}
       className={`exercise-card tv-card ${className}`.trim()}
       onSelect={onSelect}
       style={{

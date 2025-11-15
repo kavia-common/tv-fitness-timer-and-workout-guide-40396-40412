@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState, useCallback } from 'react';
 import TVFocusable from './TVFocusable';
 import WorkoutTimer from './WorkoutTimer';
 import { normalizeTVKey, isBackKey, isArrow } from '../utils/tvKeyMap';
+import { debugLog } from '../utils/debug';
 
 /**
  * PUBLIC_INTERFACE
@@ -16,9 +17,11 @@ import { normalizeTVKey, isBackKey, isArrow } from '../utils/tvKeyMap';
  * - initialFocusId?: string - id to assign to the first focusable control in the modal
  */
 export default function ExerciseModal({ exercise, onClose, initialFocusId = 'exercise-close' }) {
-  const [seconds, setSeconds] = useState(Math.max(1, Math.floor(exercise?.durationDefault || 60)));
+  const safeDuration = Math.max(1, Math.floor(exercise?.durationDefault || 60));
+  const [seconds, setSeconds] = useState(safeDuration);
   const containerRef = useRef(null);
   const focusablesRef = useRef([]);
+  const listenerAttachedRef = useRef(false);
 
   // Collect focusable elements within modal for trapping
   const collectFocusable = useCallback(() => {
@@ -38,8 +41,10 @@ export default function ExerciseModal({ exercise, onClose, initialFocusId = 'exe
     const t = setTimeout(() => {
       const f = collectFocusable();
       // Try focusing a preferred element
-      const target = containerRef.current.querySelector(`[data-focus-id="${initialFocusId}"]`) || f[0];
+      const container = containerRef.current;
+      const target = (container && container.querySelector(`[data-focus-id="${initialFocusId}"]`)) || f[0];
       if (target && typeof target.focus === 'function') target.focus();
+      debugLog('Modal', 'initial focus set', target?.getAttribute?.('data-focus-id') || target?.id);
     }, 0);
 
     return () => clearTimeout(t);
@@ -47,11 +52,14 @@ export default function ExerciseModal({ exercise, onClose, initialFocusId = 'exe
 
   // Key handler for trapping and Back to close
   useEffect(() => {
+    if (listenerAttachedRef.current) return undefined;
+
     const onKeyDown = (e) => {
       const k = normalizeTVKey(e);
       if (isBackKey(k)) {
         e.preventDefault();
         e.stopPropagation();
+        debugLog('Modal', 'back to close');
         if (typeof onClose === 'function') onClose();
         return;
       }
@@ -81,7 +89,18 @@ export default function ExerciseModal({ exercise, onClose, initialFocusId = 'exe
     };
 
     window.addEventListener('keydown', onKeyDown, true);
-    return () => window.removeEventListener('keydown', onKeyDown, true);
+    listenerAttachedRef.current = true;
+    debugLog('Modal', 'keydown listener attached');
+
+    return () => {
+      try {
+        window.removeEventListener('keydown', onKeyDown, true);
+        listenerAttachedRef.current = false;
+        debugLog('Modal', 'keydown listener removed');
+      } catch {
+        /* ignore */
+      }
+    };
   }, [onClose, collectFocusable]);
 
   if (!exercise) return null;

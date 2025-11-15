@@ -3,6 +3,7 @@ import { countdown, clamp, formatSeconds } from '../utils/time';
 import TVFocusable from './TVFocusable';
 import TimerControls from './TimerControls';
 import { normalizeTVKey, isActivationKey } from '../utils/tvKeyMap';
+import { debugLog } from '../utils/debug';
 
 /**
  * PUBLIC_INTERFACE
@@ -109,20 +110,24 @@ export default function WorkoutTimer({ seconds = 60, title = 'Timer', onComplete
       if (isActivationKey(k)) {
         e.preventDefault();
         e.stopPropagation();
+        debugLog('Timer', 'toggle via activation');
         if (!running) {
           if (remaining <= 0) setRemaining(duration);
           start();
         } else {
           pause();
         }
-      } else if (k === 'Back') {
+        return;
+      }
+      if (k === 'Back') {
         e.preventDefault();
         e.stopPropagation();
+        debugLog('Timer', 'reset via back');
         reset();
       }
     };
-    window.addEventListener('keydown', onKeyDown);
-    return () => window.removeEventListener('keydown', onKeyDown);
+    window.addEventListener('keydown', onKeyDown, true);
+    return () => window.removeEventListener('keydown', onKeyDown, true);
   }, [running, remaining, duration, start, pause, reset]);
 
   // SVG Ring calculations

@@ -2,6 +2,7 @@ import React, { forwardRef, useCallback, useEffect, useMemo, useRef } from 'reac
 import useTVFocusRing from '../hooks/useTVFocusRing';
 import { normalizeTVKey, isActivationKey } from '../utils/tvKeyMap';
 import { useFocusManager } from './FocusManager';
+import { debugLog } from '../utils/debug';
 
 /**
  * PUBLIC_INTERFACE
@@ -100,19 +101,20 @@ const TVFocusable = forwardRef(function TVFocusable(
   const activate = useCallback(
     (e) => {
       if (typeof onSelect === 'function') {
-        e.preventDefault();
-        e.stopPropagation();
+        // Only prevent defaults for handled activation events
+        try { e.preventDefault(); } catch { /* noop */ }
+        try { e.stopPropagation(); } catch { /* noop */ }
+        debugLog('TVFocusable', 'onSelect', { id, type: e?.type });
         onSelect(e);
       }
     },
-    [onSelect]
+    [onSelect, id]
   );
 
   const handleKeyDown = useCallback(
     (e) => {
       const norm = normalizeTVKey(e);
       if (isActivationKey(norm)) {
-        // Activate/select on Enter/OK/Space
         activate(e);
         return;
       }

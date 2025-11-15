@@ -1,5 +1,14 @@
-import React, { createContext, useContext, useEffect, useMemo, useRef, useState, useCallback } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  useCallback,
+} from 'react';
 import { normalizeTVKey, isArrow } from '../utils/tvKeyMap';
+import { debugLog } from '../utils/debug';
 
 /**
  * PUBLIC_INTERFACE
@@ -47,27 +56,43 @@ export function FocusManagerProvider({ children, initialFocusId = null }) {
   const { register, getById, registryRef } = useFocusableRegistry();
   const [currentId, setCurrentId] = useState(initialFocusId);
   const initialFocusSetRef = useRef(false);
+  const listenerAttachedRef = useRef(false);
 
   // Programmatic focus setter
-  const setFocus = useCallback((id) => {
-    setCurrentId(id);
-    const entry = getById(id);
-    if (entry && entry.ref?.current) {
-      requestAnimationFrame(() => {
-        try {
-          entry.ref.current.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'smooth' });
-        } catch {
-          entry.ref.current.scrollIntoView({ block: 'nearest', inline: 'nearest' });
-        }
-        entry.ref.current.focus();
-      });
-    }
-  }, [getById]);
+  const setFocus = useCallback(
+    (id) => {
+      setCurrentId(id);
+      const entry = getById(id);
+      if (entry && entry.ref?.current) {
+        requestAnimationFrame(() => {
+          try {
+            entry.ref.current.scrollIntoView({
+              block: 'nearest',
+              inline: 'nearest',
+              behavior: 'smooth',
+            });
+          } catch {
+            entry.ref.current.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+          }
+          try {
+            entry.ref.current.focus();
+          } catch {
+            /* ignore */
+          }
+        });
+      }
+    },
+    [getById]
+  );
 
   // Set initial focus on first mount if provided
-  const setInitialFocus = useCallback((id) => {
-    setFocus(id);
-  }, [setFocus]);
+  const setInitialFocus = useCallback(
+    (id) => {
+      debugLog('FocusManager', 'setInitialFocus', id);
+      setFocus(id);
+    },
+    [setFocus]
+  );
 
   useEffect(() => {
     if (initialFocusId && !initialFocusSetRef.current) {
@@ -94,28 +119,52 @@ export function FocusManagerProvider({ children, initialFocusId = null }) {
       } catch {
         next.ref.current.scrollIntoView({ block: 'nearest', inline: 'nearest' });
       }
-      next.ref.current.focus();
+      try {
+        next.ref.current.focus();
+      } catch {
+        /* ignore */
+      }
     }
   };
 
-  // Central keydown router: if no other hook consumes the event, provide linear navigation
+  // Central keydown router: attach once, capture phase, prevent default only for handled keys.
   useEffect(() => {
+    if (listenerAttachedRef.current) return undefined;
+
     const onKeyDown = (e) => {
       const k = normalizeTVKey(e);
       if (!isArrow(k)) return;
-      // prevent native scroll; handled here
-      e.preventDefault();
-      e.stopPropagation();
+      // prevent native scroll only for handled arrow keys
+      try {
+        e.preventDefault();
+        e.stopPropagation();
+      } catch {
+        /* noop */
+      }
+      debugLog('FocusManager', 'keydown', k, 'currentId=', currentId);
       if (k === 'ArrowRight' || k === 'ArrowDown') {
         moveFocus(1);
       } else if (k === 'ArrowLeft' || k === 'ArrowUp') {
         moveFocus(-1);
       }
     };
-    // Capture to run before document scrolling
-    window.addEventListener('keydown', onKeyDown, true);
-    return () => window.removeEventListener('keydown', onKeyDown, true);
-  }, [currentId]);
+
+    window.addEventListener('keydown', onKeyDown, true); // capture
+    listenerAttachedRef.current = true;
+    debugLog('FocusManager', 'global keydown listener attached');
+
+    return () => {
+      try {
+        window.removeEventListener('keydown', onKeyDown, true);
+        listenerAttachedRef.current = false;
+        debugLog('FocusManager', 'global keydown listener removed');
+      } catch {
+        /* ignore */
+      }
+    };
+    // attach once
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const getFocus = useCallback(() => currentId, [currentId]);
 
@@ -148,7 +197,15 @@ export function useFocusManager() {
  *   <button>Start</button>
  * </Focusable>
  */
-export function Focusable({ id, children, autoFocus = false, role = 'button', tabIndex = 0, className = '', ...rest }) {
+export function Focusable({
+  id,
+  children,
+  autoFocus = false,
+  role = 'button',
+  tabIndex = 0,
+  className = '',
+  ...rest
+}) {
   const { register, setInitialFocus } = useFocusManager();
   const ref = useRef(null);
 
@@ -160,7 +217,7 @@ export function Focusable({ id, children, autoFocus = false, role = 'button', ta
       requestAnimationFrame(() => setInitialFocus(id));
     }
     return unregister;
-  }, [id, register, setInitialFocus]);
+  }, [id, register, setInitialFocus, autoFocus]);
 
   // Clone child to attach ref and a11y props
   const child = React.Children.only(children);

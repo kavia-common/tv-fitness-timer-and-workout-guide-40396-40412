@@ -7,6 +7,7 @@ import Row from './components/Row';
 import { EXERCISE_SECTIONS } from './data/exercises';
 import WorkoutTimer from './components/WorkoutTimer';
 import ExerciseModal from './components/ExerciseModal';
+import { debugLog } from './utils/debug';
 
 /**
  * PUBLIC_INTERFACE
@@ -39,6 +40,8 @@ function App() {
     } catch {
       lastFocusedRef.current = null;
     }
+    if (!exercise) return;
+    debugLog('App', 'openExercise', { id: exercise.id, name: exercise.name });
     setSelectedExercise(exercise);
   };
 
@@ -183,31 +186,33 @@ function App() {
         </section>
 
         {/* Data-driven Rows */}
-        {EXERCISE_SECTIONS.map((section) => (
-          <Row
-            key={section.id}
-            id={`row-${section.id}`}
-            title={section.title}
-            items={section.items.map((it) => ({
-              id: it.id,
-              name: it.name,
-              subtitle: `${it.durationDefault}s • ${it.difficulty}`,
-              thumbnail: it.thumbnail,
-            }))}
-            onSelectItem={(item, e) => {
-              openExercise(
-                section.items.find((x) => x.id === item.id) || {
+        {(Array.isArray(EXERCISE_SECTIONS) ? EXERCISE_SECTIONS : []).map((section) => {
+          if (!section) return null;
+          const items = Array.isArray(section.items) ? section.items : [];
+          return (
+            <Row
+              key={section.id}
+              id={`row-${section.id}`}
+              title={section.title}
+              items={items.map((it) => ({
+                id: it.id,
+                name: it.name,
+                subtitle: `${Math.max(1, Math.floor(it.durationDefault || 60))}s • ${it.difficulty || 'Beginner'}`,
+                thumbnail: it.thumbnail,
+              }))}
+              onSelectItem={(item, e) => {
+                const chosen = items.find((x) => x.id === item.id) || {
                   id: item.id,
                   name: item.name,
                   description: '',
                   durationDefault: parseInt((item.subtitle || '60s').split('s')[0], 10) || 60,
                   difficulty: (item.subtitle || '').split('•')[1]?.trim() || 'Beginner',
-                },
-                e
-              );
-            }}
-          />
-        ))}
+                };
+                openExercise(chosen, e);
+              }}
+            />
+          );
+        })}
 
         {/* Modal */}
         {selectedExercise ? (

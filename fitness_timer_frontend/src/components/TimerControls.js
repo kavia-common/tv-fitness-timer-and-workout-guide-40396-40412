@@ -68,7 +68,10 @@ export default function TimerControls({
         role="button"
         tabIndex={0}
         aria-label={isRunning ? 'Pause timer' : 'Start timer'}
-        onSelect={isRunning ? onPause : onPlay}
+        onSelect={() => {
+          const fn = isRunning ? onPause : onPlay;
+          if (typeof fn === 'function') fn();
+        }}
       >
         <Icon
           src={require('../assets/icons/' + (isRunning ? 'pause' : 'play') + '.svg')}
@@ -84,7 +87,9 @@ export default function TimerControls({
         as="button"
         className="btn btn-surface"
         aria-label="Reset timer"
-        onSelect={onReset}
+        onSelect={() => {
+          if (typeof onReset === 'function') onReset();
+        }}
       >
         <Icon
           src={require('../assets/icons/reset.svg')}

@@ -81,7 +81,7 @@ export default function Header({ theme, onToggleTheme }) {
           role="button"
           tabIndex={0}
           aria-label="Start Quick Timer"
-          onSelect={() => { /* hook up to timer start when implemented */ }}
+          onSelect={() => { /* no-op until wired */ }}
         >
           <Icon src={require('../assets/icons/play.svg')} label="Start" fallback="▶" size={22} />
           <span>Start</span>

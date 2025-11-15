@@ -1,6 +1,7 @@
 import React, { useMemo, useRef } from 'react';
 import ExerciseCard from './ExerciseCard';
 import useDpadNavigation from '../hooks/useDpadNavigation';
+import { debugLog } from '../utils/debug';
 
 /**
  * PUBLIC_INTERFACE
@@ -15,32 +16,35 @@ import useDpadNavigation from '../hooks/useDpadNavigation';
  * - initialIndex?: number - initial focused column index (default 0)
  */
 export default function Row({ id = 'row', title, items = [], onSelectItem, initialIndex = 0 }) {
+  const safeItems = Array.isArray(items) ? items : [];
   const scrollerRef = useRef(null);
-  const cellRefs = useRef(items.map(() => React.createRef()));
+  const cellRefs = useRef(safeItems.map(() => React.createRef()));
 
   // Keep refs count in sync when items length changes
-  if (cellRefs.current.length !== items.length) {
-    cellRefs.current = items.map((_, i) => cellRefs.current[i] || React.createRef());
+  if (cellRefs.current.length !== safeItems.length) {
+    cellRefs.current = safeItems.map((_, i) => cellRefs.current[i] || React.createRef());
   }
 
   const { focusedColIndex, setFocused } = useDpadNavigation({
     rowCount: 1,
-    colCount: items.length,
+    colCount: safeItems.length,
     initialRow: 0,
     initialCol: initialIndex,
     loop: false,
     getRef: (_r, c) => cellRefs.current[c],
     onEnter: (_r, c) => {
-      const item = items[c];
+      const item = safeItems[c];
       if (item && typeof onSelectItem === 'function') {
+        debugLog('Row', 'onEnter select', { rowId: id, itemId: item.id });
         onSelectItem(item);
       }
     },
   });
 
   const handleCardSelect = (itemIndex) => {
-    const item = items[itemIndex];
+    const item = safeItems[itemIndex];
     if (item && typeof onSelectItem === 'function') {
+      debugLog('Row', 'onClick/onSelect', { rowId: id, itemId: item.id });
       onSelectItem(item);
     }
   };
@@ -72,7 +76,7 @@ export default function Row({ id = 'row', title, items = [], onSelectItem, initi
           scrollBehavior: 'smooth',
         }}
       >
-        {items.map((item, idx) => (
+        {safeItems.map((item, idx) => (
           <div
             key={item.id || idx}
             ref={cellRefs.current[idx]}
