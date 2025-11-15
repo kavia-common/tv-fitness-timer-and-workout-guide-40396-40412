@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './App.css';
 import ScreenWrapper from './components/ScreenWrapper';
 import Header from './components/Header';
@@ -6,6 +6,7 @@ import TVFocusable from './components/TVFocusable';
 import Row from './components/Row';
 import { EXERCISE_SECTIONS } from './data/exercises';
 import WorkoutTimer from './components/WorkoutTimer';
+import ExerciseModal from './components/ExerciseModal';
 
 /**
  * PUBLIC_INTERFACE
@@ -17,6 +18,10 @@ import WorkoutTimer from './components/WorkoutTimer';
 function App() {
   const [theme, setTheme] = useState('light');
 
+  // Modal state
+  const [selectedExercise, setSelectedExercise] = useState(null);
+  const lastFocusedRef = useRef(null);
+
   // Apply theme to document
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
@@ -25,6 +30,31 @@ function App() {
   // PUBLIC_INTERFACE
   const toggleTheme = () => {
     setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
+  };
+
+  // When opening modal, capture active element to restore later
+  const openExercise = (exercise, event) => {
+    try {
+      lastFocusedRef.current = document.activeElement;
+    } catch {
+      lastFocusedRef.current = null;
+    }
+    setSelectedExercise(exercise);
+  };
+
+  const closeExercise = () => {
+    setSelectedExercise(null);
+    // Restore focus to previously focused card if available
+    const el = lastFocusedRef.current;
+    if (el && typeof el.focus === 'function') {
+      setTimeout(() => {
+        try {
+          el.focus();
+        } catch {
+          // ignore
+        }
+      }, 0);
+    }
   };
 
   return (
@@ -99,13 +129,29 @@ function App() {
               subtitle: `${it.durationDefault}s • ${it.difficulty}`,
               thumbnail: it.thumbnail,
             }))}
-            onSelectItem={(item) => {
-              // TODO: integrate with timer/details view
-              // eslint-disable-next-line no-console
-              console.log('Selected item:', item);
+            onSelectItem={(item, e) => {
+              openExercise(
+                section.items.find((x) => x.id === item.id) || {
+                  id: item.id,
+                  name: item.name,
+                  description: '',
+                  durationDefault: parseInt((item.subtitle || '60s').split('s')[0], 10) || 60,
+                  difficulty: (item.subtitle || '').split('•')[1]?.trim() || 'Beginner',
+                },
+                e
+              );
             }}
           />
         ))}
+
+        {/* Modal */}
+        {selectedExercise ? (
+          <ExerciseModal
+            exercise={selectedExercise}
+            onClose={closeExercise}
+            initialFocusId="exercise-close"
+          />
+        ) : null}
       </div>
     </ScreenWrapper>
   );
