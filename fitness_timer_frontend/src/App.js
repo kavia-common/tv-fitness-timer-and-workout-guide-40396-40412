@@ -5,6 +5,7 @@ import Header from './components/Header';
 import TVFocusable from './components/TVFocusable';
 import Row from './components/Row';
 import { EXERCISE_SECTIONS } from './data/exercises';
+import WorkoutTimer from './components/WorkoutTimer';
 
 /**
  * PUBLIC_INTERFACE
@@ -42,15 +43,20 @@ function App() {
             Pick a workout or browse exercises to get started.
           </div>
 
+          {/* Quick access demo timer */}
           <div
-            role="list"
             className="row-enter row-enter-active"
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+              gridTemplateColumns: 'minmax(280px, 1fr) minmax(280px, 1fr) minmax(280px, 1fr)',
               gap: 'var(--space-6)',
             }}
           >
+            <div className="tv-card" style={{ padding: 'var(--space-6)' }}>
+              <div className="h3" style={{ marginBottom: 'var(--space-4)' }}>Quick Timer</div>
+              <WorkoutTimer seconds={60} title="1-Minute Timer" />
+            </div>
+
             <TVFocusable
               id="hero-quick-hiit"
               role="listitem"
@@ -77,20 +83,6 @@ function App() {
             >
               <div className="h3">Core Starter</div>
               <div style={{ color: 'var(--color-text-secondary)' }}>8 min • Beginner</div>
-            </TVFocusable>
-
-            <TVFocusable
-              id="hero-full-body"
-              role="listitem"
-              className="tv-card"
-              style={{ padding: 'var(--space-6)' }}
-              tabIndex={0}
-              onSelect={() => {
-                /* hook to start Full Body */
-              }}
-            >
-              <div className="h3">Full Body</div>
-              <div style={{ color: 'var(--color-text-secondary)' }}>20 min • Mixed</div>
             </TVFocusable>
           </div>
         </section>
