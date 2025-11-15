@@ -308,7 +308,7 @@ export const EXERCISE_SECTIONS = [
         description: 'Alternate elbow-to-knee while extending opposite leg—controlled tempo.',
         difficulty: 'Intermediate',
         equipment: 'None',
-        thumbnail: gradientBadge('#1D4ED8', '#34D399'),
+        thumbnail: '/assets/bicycle-crunch-poster.jpeg',
         tags: ['core', 'rotation', 'abs'],
       },
       {
@@ -319,7 +319,7 @@ export const EXERCISE_SECTIONS = [
         description: 'Opposite arm/leg extension from supine, maintaining neutral spine.',
         difficulty: 'Beginner',
         equipment: 'None',
-        thumbnail: gradientBadge('#0EA5E9', '#14B8A6'),
+        thumbnail: '/assets/dead-bug-poster.jpeg',
         tags: ['stability', 'control', 'beginner'],
       },
       {
@@ -330,7 +330,7 @@ export const EXERCISE_SECTIONS = [
         description: 'Elbow under shoulder, stack feet or stagger for balance; switch sides halfway.',
         difficulty: 'Intermediate',
         equipment: 'None',
-        thumbnail: gradientBadge('#2563EB', '#10B981'),
+        thumbnail: '/assets/side-plank-poster.jpeg',
         tags: ['obliques', 'isometric', 'stability'],
       },
       {
@@ -341,7 +341,7 @@ export const EXERCISE_SECTIONS = [
         description: 'Small, quick leg kicks while bracing core and keeping low back down.',
         difficulty: 'Intermediate',
         equipment: 'None',
-        thumbnail: gradientKeys.deepBlue,
+        thumbnail: '/assets/flutter-kicks-poster.jpeg',
         tags: ['lower-abs', 'endurance', 'core'],
       },
     ],
