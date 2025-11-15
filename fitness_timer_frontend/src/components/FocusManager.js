@@ -1,15 +1,17 @@
-import React, { createContext, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import React, { createContext, useContext, useEffect, useMemo, useRef, useState, useCallback } from 'react';
+import { normalizeTVKey, isArrow } from '../utils/tvKeyMap';
 
 /**
  * PUBLIC_INTERFACE
  * FocusManagerContext
- * Provides simple TV D-pad focus management scaffolding for Android TV remotes.
- * This is a minimal implementation to bootstrap navigation; it can be extended
- * later with grid awareness and spatial navigation heuristics.
+ * Provides TV D-pad focus management for Android TV remotes.
+ * Exposes register, setInitialFocus, setFocus, getFocus to integrate with hooks/components.
  */
 const FocusManagerContext = createContext({
   register: () => () => {},
   setInitialFocus: () => {},
+  setFocus: () => {},
+  getFocus: () => null,
   currentId: null,
 });
 
@@ -37,34 +39,42 @@ function useFocusableRegistry() {
  * PUBLIC_INTERFACE
  * FocusManagerProvider
  * Wrap your app in this provider to enable keyboard/D-pad focus handling.
- * - Listens to Arrow keys and Enter to move focus
- * - Keeps track of current focus id
- * - Exposes register() for focusable components
+ * - Listens to Arrow keys to move focus linearly when no grid handler overrides it
+ * - Tracks current focus id
+ * - Exposes register(), setInitialFocus(), setFocus(), getFocus()
  */
 export function FocusManagerProvider({ children, initialFocusId = null }) {
   const { register, getById, registryRef } = useFocusableRegistry();
   const [currentId, setCurrentId] = useState(initialFocusId);
   const initialFocusSetRef = useRef(false);
 
-  // Set initial focus on first mount if provided
-  const setInitialFocus = (id) => {
+  // Programmatic focus setter
+  const setFocus = useCallback((id) => {
     setCurrentId(id);
     const entry = getById(id);
     if (entry && entry.ref?.current) {
-      // Delay focus to ensure element is in DOM
       requestAnimationFrame(() => {
+        try {
+          entry.ref.current.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'smooth' });
+        } catch {
+          entry.ref.current.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+        }
         entry.ref.current.focus();
       });
     }
-  };
+  }, [getById]);
+
+  // Set initial focus on first mount if provided
+  const setInitialFocus = useCallback((id) => {
+    setFocus(id);
+  }, [setFocus]);
 
   useEffect(() => {
     if (initialFocusId && !initialFocusSetRef.current) {
       initialFocusSetRef.current = true;
       setInitialFocus(initialFocusId);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [initialFocusId]);
+  }, [initialFocusId, setInitialFocus]);
 
   // Basic linear navigation fallback: order by insertion
   const getOrderedEntries = () => Array.from(registryRef.current.values());
@@ -79,54 +89,44 @@ export function FocusManagerProvider({ children, initialFocusId = null }) {
     const next = entries[nextIndex];
     if (next && next.ref?.current) {
       setCurrentId(next.id);
+      try {
+        next.ref.current.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'smooth' });
+      } catch {
+        next.ref.current.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+      }
       next.ref.current.focus();
     }
   };
 
-  // Handle D-pad/keyboard events
+  // Central keydown router: if no other hook consumes the event, provide linear navigation
   useEffect(() => {
     const onKeyDown = (e) => {
-      switch (e.key) {
-        case 'ArrowRight':
-        case 'Right': // some TV remotes
-          e.preventDefault();
-          moveFocus(1);
-          break;
-        case 'ArrowLeft':
-        case 'Left':
-          e.preventDefault();
-          moveFocus(-1);
-          break;
-        case 'ArrowDown':
-        case 'Down':
-          e.preventDefault();
-          moveFocus(1);
-          break;
-        case 'ArrowUp':
-        case 'Up':
-          e.preventDefault();
-          moveFocus(-1);
-          break;
-        case 'Enter':
-        case 'OK':
-          // Let focused element handle click via :focus and keyboard handlers
-          break;
-        default:
-          break;
+      const k = normalizeTVKey(e);
+      if (!isArrow(k)) return;
+      // provide lightweight default behavior if nothing else prevented it
+      if (k === 'ArrowRight' || k === 'ArrowDown') {
+        e.preventDefault();
+        moveFocus(1);
+      } else if (k === 'ArrowLeft' || k === 'ArrowUp') {
+        e.preventDefault();
+        moveFocus(-1);
       }
     };
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentId]);
+
+  const getFocus = useCallback(() => currentId, [currentId]);
 
   const value = useMemo(
     () => ({
       register,
       setInitialFocus,
+      setFocus,
+      getFocus,
       currentId,
     }),
-    [register, setInitialFocus, currentId]
+    [register, setInitialFocus, setFocus, getFocus, currentId]
   );
 
   return <FocusManagerContext.Provider value={value}>{children}</FocusManagerContext.Provider>;
@@ -159,8 +159,7 @@ export function Focusable({ id, children, autoFocus = false, role = 'button', ta
       requestAnimationFrame(() => setInitialFocus(id));
     }
     return unregister;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id]);
+  }, [id, register, setInitialFocus]);
 
   // Clone child to attach ref and a11y props
   const child = React.Children.only(children);

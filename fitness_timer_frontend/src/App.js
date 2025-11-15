@@ -8,6 +8,7 @@ import Header from './components/Header';
  * App
  * Root of the Android TV Fitness Timer and Workout Guide UI.
  * Renders ScreenWrapper -> Header -> placeholder Row containers.
+ * Includes focus-ready layout that integrates with FocusManager key routing.
  */
 function App() {
   const [theme, setTheme] = useState('light');
@@ -47,15 +48,15 @@ function App() {
               gap: 'var(--space-6)',
             }}
           >
-            <div role="listitem" className="tv-card" style={{ padding: 'var(--space-6)' }}>
+            <div role="listitem" className="tv-card" style={{ padding: 'var(--space-6)' }} tabIndex={0}>
               <div className="h3">Quick HIIT</div>
               <div style={{ color: 'var(--color-text-secondary)' }}>10 min • High intensity</div>
             </div>
-            <div role="listitem" className="tv-card" style={{ padding: 'var(--space-6)' }}>
+            <div role="listitem" className="tv-card" style={{ padding: 'var(--space-6)' }} tabIndex={0}>
               <div className="h3">Core Starter</div>
               <div style={{ color: 'var(--color-text-secondary)' }}>8 min • Beginner</div>
             </div>
-            <div role="listitem" className="tv-card" style={{ padding: 'var(--space-6)' }}>
+            <div role="listitem" className="tv-card" style={{ padding: 'var(--space-6)' }} tabIndex={0}>
               <div className="h3">Full Body</div>
               <div style={{ color: 'var(--color-text-secondary)' }}>20 min • Mixed</div>
             </div>
@@ -77,7 +78,7 @@ function App() {
             }}
           >
             {['Push-ups', 'Squats', 'Plank', 'Burpees', 'Lunges', 'Mountain Climbers'].map((name) => (
-              <div key={name} role="listitem" className="tv-card" style={{ padding: 'var(--space-6)' }}>
+              <div key={name} role="listitem" className="tv-card" style={{ padding: 'var(--space-6)' }} tabIndex={0}>
                 <div className="h3" style={{ marginBottom: 'var(--space-2)' }}>
                   {name}
                 </div>
