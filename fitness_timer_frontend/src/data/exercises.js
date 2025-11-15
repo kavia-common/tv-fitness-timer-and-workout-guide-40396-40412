@@ -111,7 +111,7 @@ export const EXERCISE_SECTIONS = [
         description: 'Upper body push exercise targeting chest, shoulders, and triceps.',
         difficulty: 'Intermediate',
         equipment: 'None',
-        thumbnail: gradientBadge('#2563EB', '#1E3A8A'),
+        thumbnail: '/assets/push-up-poster.jpeg',
         tags: ['upper-body', 'push', 'bodyweight'],
       },
       {
@@ -122,7 +122,7 @@ export const EXERCISE_SECTIONS = [
         description: 'Lower body compound move emphasizing quads and glutes.',
         difficulty: 'Beginner',
         equipment: 'None',
-        thumbnail: gradientKeys.deepBlue,
+        thumbnail: '/assets/air-squats-poster.jpeg',
         tags: ['lower-body', 'glutes', 'quads', 'bodyweight'],
       },
       {
@@ -133,7 +133,7 @@ export const EXERCISE_SECTIONS = [
         description: 'Core stabilization—maintain a straight line from head to heels.',
         difficulty: 'Intermediate',
         equipment: 'None',
-        thumbnail: gradientBadge('#0EA5E9', '#14B8A6'),
+        thumbnail: '/assets/plank-holder-poster.jpeg',
         tags: ['core', 'isometric', 'stability'],
       },
       {
@@ -144,7 +144,7 @@ export const EXERCISE_SECTIONS = [
         description: 'Step forward, lower under control, alternate legs each rep.',
         difficulty: 'Beginner',
         equipment: 'None',
-        thumbnail: gradientKeys.tealMint,
+        thumbnail: '/assets/alternating-lunges-poster.jpeg',
         tags: ['lower-body', 'glutes', 'balance'],
       },
       {
@@ -155,7 +155,7 @@ export const EXERCISE_SECTIONS = [
         description: 'Engage glutes and hamstrings by lifting hips and squeezing at the top.',
         difficulty: 'Beginner',
         equipment: 'None',
-        thumbnail: gradientBadge('#2563EB', '#F59E0B'),
+        thumbnail: '/assets/glute-bridge-poster.jpeg',
         tags: ['posterior-chain', 'glutes', 'hamstrings'],
       },
       {
@@ -166,7 +166,7 @@ export const EXERCISE_SECTIONS = [
         description: 'Use a stable chair or bench to target triceps with controlled dips.',
         difficulty: 'Intermediate',
         equipment: 'Optional',
-        thumbnail: gradientBadge('#1D4ED8', '#F59E0B'),
+        thumbnail: '/assets/chair-tricep-poster.jpeg',
         tags: ['upper-body', 'triceps', 'bodyweight'],
       },
     ],

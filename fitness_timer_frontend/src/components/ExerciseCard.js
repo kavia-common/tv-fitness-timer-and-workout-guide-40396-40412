@@ -26,7 +26,12 @@ export default function ExerciseCard({
 }) {
   // Map "gradient:*" tokens to theme-based gradients
   const backgroundStyle = useMemo(() => {
-    if (!thumbnail) return {};
+    if (!thumbnail) {
+      // Fallback subtle gradient background when thumbnail is missing
+      return {
+        backgroundImage: 'linear-gradient(135deg, rgba(17,24,39,0.35), rgba(31,41,55,0.55))',
+      };
+    }
     if (typeof thumbnail === 'string' && thumbnail.startsWith('gradient:')) {
       const key = thumbnail.split(':')[1];
       switch (key) {
@@ -81,7 +86,26 @@ export default function ExerciseCard({
         ...style,
       }}
     >
-      {/* Image mask/gradient overlay for readable text */}
+      {/* Image layer for explicit src paths, ensuring object-fit: cover inside rounded mask */}
+      {typeof thumbnail === 'string' && thumbnail && !thumbnail.startsWith('gradient:') ? (
+        <img
+          src={thumbnail}
+          alt=""
+          aria-hidden="true"
+          onError={(e) => {
+            // hide broken image; allow gradient fallback to show
+            e.currentTarget.style.display = 'none';
+          }}
+          style={{
+            position: 'absolute',
+            inset: 0,
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+          }}
+        />
+      ) : null}
+      {/* Scrim overlay for readable text */}
       <div
         aria-hidden="true"
         style={{
