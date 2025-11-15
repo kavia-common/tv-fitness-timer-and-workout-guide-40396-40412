@@ -13,10 +13,15 @@
   --color-border: #E5E7EB;  /* Gray 200 */
   --color-muted: #9CA3AF;   /* Gray 400 */
 
+  /* Integrate style_guide canvas + gradients */
+  --bg-gradient-start: #F5F8FF;
+  --bg-gradient-end: #D8E8FF;
+
   /* Gradients */
   --gradient-ocean: linear-gradient(180deg, rgba(37, 99, 235, 0.08) 0%, rgba(249, 250, 251, 1) 100%);
   --gradient-ambient: radial-gradient(1200px 600px at 10% -10%, rgba(37, 99, 235, 0.12) 0%, rgba(255, 255, 255, 0) 60%),
                       radial-gradient(900px 500px at 90% -20%, rgba(245, 158, 11, 0.08) 0%, rgba(255, 255, 255, 0) 60%);
+  --gradient-canvas: linear-gradient(180deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
 
   /* Spacing scale (TV-scale: slightly larger) */
   --space-0: 0;
@@ -37,6 +42,7 @@
   --radius-md: 12px;
   --radius-lg: 16px;
   --radius-xl: 24px;
+  --radius-2xl: 28px;
   --radius-pill: 999px;
 
   /* Shadows (subtle + elevation) */
@@ -44,37 +50,54 @@
   --shadow-md: 0 6px 20px rgba(0,0,0,0.12);
   --shadow-lg: 0 10px 36px rgba(0,0,0,0.18);
 
-  /* Focus ring: high-contrast outline + amber glow for TV focus visibility */
-  --focus-ring-color: rgba(245, 158, 11, 0.95);
-  --focus-ring-outline: 3px solid var(--focus-ring-color);
-  --focus-ring-shadow: 0 0 0 6px rgba(245, 158, 11, 0.25), 0 6px 16px rgba(0,0,0,0.18);
+  /* Stronger TV focus ring per design notes: thicker amber glow + inner white stroke */
+  --focus-ring-color: rgba(245, 158, 11, 0.98);
+  --focus-ring-outline: 4px solid var(--focus-ring-color);
+  --focus-ring-shadow: 0 0 0 8px rgba(245, 158, 11, 0.28), 0 8px 20px rgba(0,0,0,0.2);
+  --focus-inner-stroke: 0 0 0 2px rgba(255,255,255,0.92) inset;
 
   /* Transitions / motion */
   --ease-standard: cubic-bezier(0.2, 0.8, 0.2, 1);
-  --transition-fast: 120ms var(--ease-standard);
+  --transition-fast: 150ms var(--ease-standard);
   --transition-med: 220ms var(--ease-standard);
   --transition-slow: 360ms var(--ease-standard);
 
-  /* TV-scale base font sizes (use with rem) */
+  /* TV-scale base font sizes (use with rem) per 10-foot scale */
   --font-size-base: 20px;      /* TV base ~18–22px */
   --font-size-xs: 0.8rem;      /* ~16px */
   --font-size-sm: 0.9rem;      /* ~18px */
   --font-size-md: 1rem;        /* ~20px */
   --font-size-lg: 1.2rem;      /* ~24px */
   --font-size-xl: 1.6rem;      /* ~32px */
-  --font-size-2xl: 2rem;       /* ~40px */
-  --font-size-3xl: 2.6rem;     /* ~52px */
+  --font-size-2xl: 2.2rem;     /* ~44px section headers */
+  --font-size-3xl: 2.8rem;     /* ~56px hero/timer */
+}
+
+/* Header glass bar per design notes */
+header.px-container {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  height: 92px;
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  background: rgba(255,255,255,0.55);
+  border-bottom: 1px solid var(--color-border);
+  backdrop-filter: blur(16px) saturate(120%);
+  -webkit-backdrop-filter: blur(16px) saturate(120%);
 }
 
 /* Base card utility using theme tokens */
 .tv-card {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-xl);
   box-shadow: var(--shadow-sm);
   color: var(--color-text);
-  transition: transform var(--transition-med), box-shadow var(--transition-med), border-color var(--transition-med);
+  transition: transform var(--transition-med), box-shadow var(--transition-med), border-color var(--transition-med), filter var(--transition-med);
   will-change: transform, box-shadow;
+  overflow: visible; /* Ensure focus ring not clipped */
 }
 
 .tv-card:hover {
@@ -84,15 +107,15 @@
 
 .tv-card:focus-visible {
   outline: var(--focus-ring-outline);
-  box-shadow: var(--focus-ring-shadow);
+  box-shadow: var(--focus-inner-stroke), var(--focus-ring-shadow);
   transform: scale(1.02);
 }
 
 /* Focus utilities */
 .focus-visible-outline:focus-visible {
   outline: var(--focus-ring-outline);
-  box-shadow: var(--focus-ring-shadow);
-  border-radius: var(--radius-md);
+  box-shadow: var(--focus-inner-stroke), var(--focus-ring-shadow);
+  border-radius: var(--radius-lg);
   transform: translateZ(0) scale(1.02);
 }
 
@@ -115,6 +138,7 @@
   align-items: center;
   justify-content: center;
   gap: var(--space-2);
+  min-height: 64px;
   padding: var(--space-3) var(--space-5);
   border-radius: var(--radius-pill);
   border: 1px solid transparent;
@@ -122,7 +146,7 @@
   color: #fff;
   font-weight: 700;
   letter-spacing: 0.2px;
-  transition: transform var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast), border-color var(--transition-fast);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast), border-color var(--transition-fast), filter var(--transition-fast);
   will-change: transform, box-shadow;
   line-height: 1;
 }
@@ -130,16 +154,17 @@
 .btn:hover {
   transform: translateY(-1px);
   box-shadow: var(--shadow-md);
+  filter: brightness(1.02);
 }
 
 .btn:active {
-  transform: translateY(0);
+  transform: scale(0.985);
   box-shadow: var(--shadow-sm);
 }
 
 .btn:focus-visible {
   outline: var(--focus-ring-outline);
-  box-shadow: var(--focus-ring-shadow);
+  box-shadow: var(--focus-inner-stroke), var(--focus-ring-shadow);
 }
 
 .btn-secondary {
@@ -153,15 +178,18 @@
   border-color: var(--color-border);
 }
 
-/* Utility spacing classes for TV layout */
+/* Utility spacing classes for TV layout with safe-area and max-width */
 .px-container {
-  padding-left: clamp(var(--space-6), 5vw, var(--space-16));
-  padding-right: clamp(var(--space-6), 5vw, var(--space-16));
+  padding-left: max(clamp(var(--space-6), 5vw, var(--space-16)), env(safe-area-inset-left));
+  padding-right: max(clamp(var(--space-6), 5vw, var(--space-16)), env(safe-area-inset-right));
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 1600px;
 }
 
 .py-screen {
-  padding-top: var(--space-10);
-  padding-bottom: var(--space-10);
+  padding-top: max(var(--space-10), env(safe-area-inset-top));
+  padding-bottom: max(var(--space-10), env(safe-area-inset-bottom));
 }
 
 /* Headings tuned for TV readability */
@@ -169,24 +197,34 @@
   font-size: var(--font-size-3xl);
   line-height: 1.2;
   margin: 0 0 var(--space-6);
+  letter-spacing: 0.3px;
 }
 
 .h2 {
   font-size: var(--font-size-2xl);
-  line-height: 1.25;
-  margin: 0 0 var(--space-5);
+  line-height: 1.22;
+  margin: 0 0 var(--space-6);
+  letter-spacing: 0.25px;
 }
 
 .h3 {
   font-size: var(--font-size-xl);
   line-height: 1.3;
   margin: 0 0 var(--space-4);
+  letter-spacing: 0.2px;
 }
 
-/* Ambient background helper */
+/* Ambient background helper + global gradient */
 .bg-ocean-ambient {
-  background-image: var(--gradient-ambient), var(--gradient-ocean);
+  background-image: var(--gradient-ambient), var(--gradient-canvas);
   background-attachment: fixed, fixed;
   background-repeat: no-repeat, no-repeat;
   background-size: cover, cover;
+}
+
+/* Row card focus helper for carousels */
+.row-card-focused {
+  transform: scale(1.02);
+  box-shadow: var(--focus-inner-stroke), var(--focus-ring-shadow);
+  transition: transform var(--transition-med), box-shadow var(--transition-med);
 }

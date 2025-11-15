@@ -51,11 +51,11 @@ export default function useDpadNavigation(options) {
       const ref = getRef(r, c);
       const el = ref && ref.current;
       if (el && el.scrollIntoView) {
-        // Use smooth scroll for TV-friendly movement
+        // Use smooth scroll and try to center in view horizontally
         try {
-          el.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'smooth' });
+          el.scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' });
         } catch {
-          el.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+          el.scrollIntoView({ block: 'nearest', inline: 'center' });
         }
       }
       if (el && typeof el.focus === 'function') {

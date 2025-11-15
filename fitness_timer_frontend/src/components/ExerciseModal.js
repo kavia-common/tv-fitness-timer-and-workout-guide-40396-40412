@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import TVFocusable from './TVFocusable';
 import WorkoutTimer from './WorkoutTimer';
-import { normalizeTVKey, isBackKey, isArrow, isActivationKey } from '../utils/tvKeyMap';
+import { normalizeTVKey, isBackKey, isArrow } from '../utils/tvKeyMap';
 
 /**
  * PUBLIC_INTERFACE
@@ -56,13 +56,11 @@ export default function ExerciseModal({ exercise, onClose, initialFocusId = 'exe
         return;
       }
 
-      // Trap focus navigation with arrows between our key focusables, specifically timer controls row
-      // Fallback: for Left/Right, move between the first row of focusable controls (Close, Play/Pause, Reset, Presets)
+      // Trap focus navigation horizontally between the first row of focusables
       if (isArrow(k)) {
         const f = collectFocusable();
         if (!f.length) return;
 
-        // Determine current index
         const active = document.activeElement;
         const idx = f.findIndex((el) => el === active);
         if (idx >= 0) {
@@ -75,7 +73,6 @@ export default function ExerciseModal({ exercise, onClose, initialFocusId = 'exe
             f[nextIdx].focus();
           }
         } else {
-          // If nothing is focused, focus first
           e.preventDefault();
           e.stopPropagation();
           f[0].focus();
@@ -101,10 +98,12 @@ export default function ExerciseModal({ exercise, onClose, initialFocusId = 'exe
         zIndex: 9999,
         display: 'grid',
         gridTemplateRows: 'auto 1fr',
-        // Polished modal backdrop with vignette
-        background: 'radial-gradient(1200px 600px at 50% -10%, rgba(37,99,235,0.15) 0%, rgba(17,24,39,0.85) 50%, rgba(17,24,39,0.95) 100%)',
+        // Modal backdrop with scrim and soft vignette
+        background: 'linear-gradient(180deg, rgba(5,15,28,0.45), rgba(5,15,28,0.65))',
         color: '#fff',
         overflow: 'hidden',
+        paddingTop: 'env(safe-area-inset-top)',
+        paddingBottom: 'env(safe-area-inset-bottom)',
       }}
     >
       {/* Top bar: title and Close */}
@@ -120,7 +119,7 @@ export default function ExerciseModal({ exercise, onClose, initialFocusId = 'exe
       >
         <div>
           <div className="h2" style={{ color: '#fff', margin: 0 }}>{exercise.name}</div>
-          <div style={{ color: 'rgba(255,255,255,0.8)', marginTop: 4, fontSize: 'var(--font-size-sm)' }}>
+          <div style={{ color: 'rgba(255,255,255,0.86)', marginTop: 4, fontSize: 'var(--font-size-sm)' }}>
             {exercise.durationDefault}s • {exercise.difficulty} {exercise.equipment ? `• ${exercise.equipment}` : ''}
           </div>
         </div>
@@ -161,7 +160,7 @@ export default function ExerciseModal({ exercise, onClose, initialFocusId = 'exe
         className="px-container"
         style={{
           display: 'grid',
-          gridTemplateColumns: '1.1fr 1fr',
+          gridTemplateColumns: '1.05fr 1fr',
           gap: 'var(--space-8)',
           alignItems: 'start',
           paddingBottom: 'var(--space-10)',
@@ -171,12 +170,12 @@ export default function ExerciseModal({ exercise, onClose, initialFocusId = 'exe
         {/* Left: Details */}
         <div className="tv-card" style={{ padding: 'var(--space-6)', background: 'rgba(255,255,255,0.06)', borderColor: 'rgba(255,255,255,0.18)' }}>
           <div className="h3" style={{ color: '#fff', marginTop: 0, marginBottom: 'var(--space-4)' }}>About</div>
-          <div style={{ color: 'rgba(255,255,255,0.88)', lineHeight: 1.5 }}>
+          <div style={{ color: 'rgba(255,255,255,0.9)', lineHeight: 1.5 }}>
             {exercise.description}
           </div>
 
           {/* Presets as focusable chips for quick duration set */}
-          <div style={{ marginTop: 'var(--space-6)', color: 'rgba(255,255,255,0.9)' }}>
+          <div style={{ marginTop: 'var(--space-6)', color: 'rgba(255,255,255,0.92)' }}>
             <div style={{ marginBottom: 'var(--space-3)' }}>Quick presets:</div>
             <div style={{ display: 'flex', gap: 'var(--space-3)', flexWrap: 'wrap' }}>
               {[30, 45, 60, 90].map((s) => (

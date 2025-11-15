@@ -126,7 +126,7 @@ export default function WorkoutTimer({ seconds = 60, title = 'Timer', onComplete
   }, [running, remaining, duration, start, pause, reset]);
 
   // SVG Ring calculations
-  const R = 90;
+  const R = 100;
   const CIRC = 2 * Math.PI * R;
   const dash = useMemo(() => {
     const d = CIRC * progress;
@@ -160,16 +160,16 @@ export default function WorkoutTimer({ seconds = 60, title = 'Timer', onComplete
         ref={pulseRef}
         style={{
           position: 'relative',
-          width: 220,
-          height: 220,
+          width: 240,
+          height: 240,
           display: 'grid',
           placeItems: 'center',
         }}
       >
         <svg
-          width="220"
-          height="220"
-          viewBox="0 0 220 220"
+          width="240"
+          height="240"
+          viewBox="0 0 240 240"
           style={{ transform: 'rotate(-90deg)' }}
           ref={ringRef}
           aria-hidden="true"
@@ -209,7 +209,7 @@ export default function WorkoutTimer({ seconds = 60, title = 'Timer', onComplete
             transform: 'rotate(0deg)',
           }}
         >
-          <div style={{ fontSize: 'var(--font-size-3xl)', fontWeight: 800 }}>
+          <div style={{ fontSize: 'calc(var(--font-size-3xl) + 6px)', fontWeight: 800 }}>
             {formatSeconds(remaining)}
           </div>
           <div style={{ color: 'var(--color-text-secondary)', marginTop: 6 }}>

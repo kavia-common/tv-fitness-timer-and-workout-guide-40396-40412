@@ -59,17 +59,17 @@ export default function Row({ id = 'row', title, items = [], onSelectItem, initi
         style={{
           display: 'grid',
           gridAutoFlow: 'column',
-          gridAutoColumns: 'minmax(280px, 320px)',
+          gridAutoColumns: 'minmax(296px, 320px)',
           gap: 'var(--space-6)',
 
           // Enable smooth horizontal scrolling and scroll snap
           overflowX: 'auto',
           overflowY: 'hidden',
-          scrollSnapType: 'x mandatory',
           WebkitOverflowScrolling: 'touch',
           paddingBottom: 'var(--space-2)',
           // Hide native scrollbar visually but keep it accessible
           scrollbarWidth: 'none',
+          scrollBehavior: 'smooth',
         }}
       >
         {items.map((item, idx) => (
@@ -77,9 +77,11 @@ export default function Row({ id = 'row', title, items = [], onSelectItem, initi
             key={item.id || idx}
             ref={cellRefs.current[idx]}
             style={{
-              scrollSnapAlign: 'start',
+              scrollSnapAlign: 'center',
               scrollSnapStop: 'always',
               outline: 'none',
+              minWidth: 296,
+              maxWidth: 320,
             }}
           >
             <ExerciseCard
@@ -90,7 +92,7 @@ export default function Row({ id = 'row', title, items = [], onSelectItem, initi
               onSelect={() => handleCardSelect(idx)}
               className={focusedColIndex === idx ? 'row-card-focused' : ''}
               style={{
-                minHeight: 240,
+                minHeight: 260,
               }}
             />
           </div>

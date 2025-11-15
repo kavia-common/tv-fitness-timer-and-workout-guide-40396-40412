@@ -66,10 +66,10 @@ function App() {
         <section
           className="px-container smooth-fade-in"
           aria-label="Featured Workouts"
-          style={{ marginTop: 'var(--space-6)' }}
+          style={{ marginTop: 'var(--space-8)' }}
         >
           <div className="h1">Welcome back</div>
-          <div style={{ color: 'var(--color-text-secondary)', marginBottom: 'var(--space-6)' }}>
+          <div style={{ color: 'var(--color-text-secondary)', marginBottom: 'var(--space-8)' }}>
             Pick a workout or browse exercises to get started.
           </div>
 
@@ -78,7 +78,7 @@ function App() {
             className="row-enter row-enter-active"
             style={{
               display: 'grid',
-              gridTemplateColumns: 'minmax(280px, 1fr) minmax(280px, 1fr) minmax(280px, 1fr)',
+              gridTemplateColumns: 'minmax(296px, 1fr) minmax(296px, 1fr) minmax(296px, 1fr)',
               gap: 'var(--space-6)',
             }}
           >

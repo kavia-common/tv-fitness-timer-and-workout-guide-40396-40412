@@ -60,25 +60,26 @@ export default function ExerciseCard({
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'flex-end',
-        borderRadius: 'var(--radius-xl)',
+        borderRadius: 'var(--radius-2xl)',
         overflow: 'hidden',
-        minHeight: 220,
+        minHeight: 260,
         // Focus animation: subtle scale + elevate shadow
         transition: 'transform var(--transition-med), box-shadow var(--transition-med), border-color var(--transition-med), background var(--transition-med), filter var(--transition-med)',
         backgroundColor: 'var(--color-surface)',
         position: 'relative',
+        boxShadow: 'var(--shadow-sm)',
         ...backgroundStyle,
         ...style,
       }}
     >
-      {/* Gradient overlay for readable text */}
+      {/* Image mask/gradient overlay for readable text */}
       <div
         aria-hidden="true"
         style={{
           position: 'absolute',
           inset: 0,
           background:
-            'linear-gradient(to top, rgba(0,0,0,0.45), rgba(0,0,0,0.15) 45%, rgba(0,0,0,0.0))',
+            'linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(0,0,0,0.10) 40%, rgba(0,0,0,0.28) 100%)',
           pointerEvents: 'none',
         }}
       />
@@ -98,17 +99,38 @@ export default function ExerciseCard({
             lineHeight: 1.22,
             fontWeight: 800,
             letterSpacing: 0.2,
+            display: '-webkit-box',
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: 'vertical',
+            overflow: 'hidden',
           }}
         >
           {name}
         </div>
         {subtitle ? (
-          <div style={{ marginTop: 'var(--space-2)', opacity: 0.9, fontSize: 'var(--font-size-md)' }}>
+          <div style={{ marginTop: 'var(--space-2)', opacity: 0.95, fontSize: 'var(--font-size-md)' }}>
             {subtitle}
           </div>
         ) : null}
       </div>
-      {/* Focus scale via :focus-visible is applied by focus-visible-outline class in theme */}
+      {/* Badge hook (top-right) */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          top: 'var(--space-4)',
+          right: 'var(--space-4)',
+          padding: '6px 10px',
+          borderRadius: '999px',
+          background: 'rgba(0,0,0,0.25)',
+          color: '#fff',
+          fontSize: 'var(--font-size-xs)',
+          boxShadow: '0 2px 6px rgba(0,0,0,0.2)',
+          display: 'none', /* show when needed */
+        }}
+      >
+        Badge
+      </div>
     </TVFocusable>
   );
 }

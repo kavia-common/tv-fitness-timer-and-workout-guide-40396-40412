@@ -38,8 +38,8 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  /* TV ambient gradient background */
-  background-image: var(--gradient-ambient), var(--gradient-ocean);
+  /* TV ambient gradient background unified with header glass */
+  background-image: var(--gradient-ambient), var(--gradient-canvas);
   background-attachment: fixed, fixed;
   background-repeat: no-repeat, no-repeat;
   background-size: cover, cover;
@@ -63,7 +63,7 @@ body {
 /* Focus visible utility for TV navigation */
 .focus-visible {
   outline: var(--focus-ring-outline);
-  box-shadow: var(--focus-ring-shadow);
+  box-shadow: var(--focus-inner-stroke), var(--focus-ring-shadow);
 }
 
 /* Pointer hover/click feedback for mouse users */
@@ -78,10 +78,11 @@ body {
 .card {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-xl);
   box-shadow: var(--shadow-sm);
   transition: transform var(--transition-med), box-shadow var(--transition-med), border-color var(--transition-med);
   will-change: transform, box-shadow;
+  overflow: visible;
 }
 
 .card:hover {
@@ -91,21 +92,29 @@ body {
 
 .card:focus-visible {
   outline: var(--focus-ring-outline);
-  box-shadow: var(--focus-ring-shadow);
+  box-shadow: var(--focus-inner-stroke), var(--focus-ring-shadow);
 }
 
 /* Row scroller scrollbar hidden (Firefox and WebKit) */
 .row-scroller {
   scrollbar-width: none;
+  scroll-snap-type: x mandatory;
+  scroll-padding: 0 50%;
 }
 .row-scroller::-webkit-scrollbar {
   display: none;
 }
 
+/* Center focused item in carousels */
+.row-scroller > * {
+  scroll-snap-align: center;
+  scroll-snap-stop: always;
+}
+
 /* Focus scaling helper for row items (applied via className) */
 .row-card-focused {
   transform: scale(1.02);
-  box-shadow: var(--shadow-lg);
+  box-shadow: var(--focus-inner-stroke), var(--focus-ring-shadow);
   transition: transform var(--transition-med), box-shadow var(--transition-med);
 }
 
