@@ -246,7 +246,7 @@ export const EXERCISE_SECTIONS = [
         description: 'Seated or standing stretch targeting hamstrings; keep back neutral.',
         difficulty: 'Beginner',
         equipment: 'Optional',
-        thumbnail: gradientBadge('#34D399', '#2563EB'),
+        thumbnail: '/assets/hamstring-stretch.jpeg',
         tags: ['lower-body', 'stretch', 'recovery'],
       },
       {
@@ -257,7 +257,7 @@ export const EXERCISE_SECTIONS = [
         description: 'Standing quad stretch holding ankle; keep knees aligned.',
         difficulty: 'Beginner',
         equipment: 'Optional',
-        thumbnail: gradientKeys.tealMint,
+        thumbnail: '/assets/quad-stretch.jpeg',
         tags: ['lower-body', 'balance', 'stretch'],
       },
       {
@@ -268,7 +268,7 @@ export const EXERCISE_SECTIONS = [
         description: 'Gently pull arm across body to stretch posterior shoulder.',
         difficulty: 'Beginner',
         equipment: 'None',
-        thumbnail: gradientBadge('#93C5FD', '#0EA5E9'),
+        thumbnail: '/assets/shoulder-crossing.jpeg',
         tags: ['upper-body', 'stretch', 'mobility'],
       },
       {
@@ -279,7 +279,7 @@ export const EXERCISE_SECTIONS = [
         description: 'Kneeling lunge; tuck pelvis slightly to target hip flexors.',
         difficulty: 'Beginner',
         equipment: 'Optional',
-        thumbnail: gradientBadge('#2563EB', '#F59E0B'),
+        thumbnail: '/assets/hip-flexor-stretch.jpeg',
         tags: ['hip', 'stretch', 'recovery'],
       },
       {
@@ -290,7 +290,7 @@ export const EXERCISE_SECTIONS = [
         description: 'Spinal flexion/extension sequence to mobilize back and improve posture.',
         difficulty: 'Beginner',
         equipment: 'None',
-        thumbnail: gradientKeys.ocean,
+        thumbnail: '/assets/cat-cow-flow.jpeg',
         tags: ['spine', 'mobility', 'yoga'],
       },
     ],
